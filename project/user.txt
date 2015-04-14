@@ -1,0 +1,73 @@
+{
+    "name": "Alex Park",
+    "age": "25",
+    "sex": "F",
+    "exercise": {
+        "bicepLift": [
+            {
+                "date": "Jan-11-2015",
+                "weight": 10,
+                "reps": 8,
+                "calories": 300
+            },
+            {
+                "date": "Jan-12-2015",
+                "weight": 15,
+                "reps": 9,
+                "calories" : 400
+            },
+            {
+                "date": "Jan-13-2015",
+                "weight": 18,
+                "reps": 9,
+                "calories": 500
+            }
+        ],
+        "tricepLift": [
+            {
+                "date": "Jan-11-2015",
+                "weight": 30,
+                "reps": 30,
+                "calories": 200
+            },
+            {
+                "date": "Jan-13-2015",
+                "weight": 35,
+                "reps": 30,
+                "calories": 300
+            },
+            {
+                "date": "Jan-16-2015",
+                "weight": "40",
+                "reps": "30",
+                "calories": 400
+            }
+        ],
+        "squat": [
+            "null"
+        ],
+        "deadLift": [
+            {
+                "date": "Jan-11-2015",
+                "weight": 100,
+                "reps": 8,
+                "calories": 300
+            },
+            {
+                "date": "Jan-14-2015",
+                "weight": 110,
+                "reps": 9,
+                "calories": 300
+            },
+            {
+                "date": "Jan-18-2015",
+                "weight": 110,
+                "reps": 10,
+                "calories": 300
+            }
+        ],
+        "benchPress" [
+             "null"
+        ]
+    }
+}
