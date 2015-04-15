@@ -29,27 +29,30 @@ import org.json.simple.parser.ParseException;
 public class TestData 
 {
     
-
+    final static String NAME = "Name";
+    final static String AGE = "Age";
+    final static String GENDER = "Gender";
+    
     static File file;
     
     static JSONObject rootJson;
     static JSONObject exerciseListJson;
-    static JSONArray bicepLiftJson;
+    static JSONArray bicepJson;
     
     static UserAccount account;
     static ArrayList<Exercise> exerciseList;
-    static Exercise bicepLift = new Exercise("bicepLift");
+    static Exercise bicep = new Exercise("Bicep");
     
     public static void main(String[] args)
     {
            openFile();
            deleteLog(2);
            
-           System.out.println(bicepLift);
+           System.out.println(bicep);
            
            addLog("2015-Apr-14", 100, 12, 300);
            
-           System.out.println(bicepLift);
+           System.out.println(bicep);
            
            saveFile();
            
@@ -58,7 +61,7 @@ public class TestData
     private static void openFile()
     {
         
-        file = new File("user.txt");
+        file = new File("user.json");
         
         try 
         {
@@ -80,120 +83,130 @@ public class TestData
             rootJson = (JSONObject) parser.parse(jsonString);
             
             
-            String name = (String) rootJson.get("name");
-            int age = (int)((long) rootJson.get("age"));
-            char gender = ((String)rootJson.get("gender")).charAt(0);
+            String name = (String) rootJson.get(NAME);
+            int age = (int)((long) rootJson.get(AGE));
+            char gender = ((String)rootJson.get(GENDER)).charAt(0);
             
             account = new UserAccount(name, age, gender);
             
             System.out.println(account);
             
             // exerciseListJson contains an array of different kinds of exercise
-            exerciseListJson = (JSONObject) rootJson.get("exerciseList");
+            exerciseListJson = (JSONObject) rootJson.get("ExerciseList");
             
             
             // bicepLiftJson contains an array of daily logs
-            bicepLiftJson = (JSONArray)exerciseListJson.get("bicepLift");
-            
-            
-            for (int i = 0; i < bicepLiftJson.size(); i++)
+            bicepJson = (JSONArray)exerciseListJson.get("Bicep");
+                        
+            for (int i = 0; i < bicepJson.size(); i++)
             {
-                JSONObject obj = (JSONObject)bicepLiftJson.get(i);
-                
-                String date = (String) obj.get("date");
-                int weight = (int)((long) obj.get("weight"));
-                int reps = (int)((long) obj.get("reps"));
-                int calories = (int)((long) obj.get("calories"));
-                
-                
-                Log log = new Log(date, weight, reps, calories);
-                
-                bicepLift.add(log);
-                
-                System.out.println(log + "\n");
-                
+                if(!bicepJson.isEmpty())
+                {
+                    JSONObject obj = (JSONObject)bicepJson.get(i);
+
+                    String date = (String) obj.get("date");
+                    int weight = (int)((long) obj.get("weight"));
+                    int reps = (int)((long) obj.get("reps"));
+                    int calories = (int)((long) obj.get("calories"));
+
+
+                    Log log = new Log(date, weight, reps, calories);
+
+                    bicep.add(log);
+
+                    System.out.println(log + "\n");
+
+                }
             }
             
             //exerciseList.add(bicepLift);
             //account.setExerciseList(exerciseList);
             
-//            
-//            JSONArray tricepLift = (JSONArray)exerciseListJson.get("tricepLift");
-//            
-//            for (int i = 0; i < tricepLift.size(); i++)
-//            {
-//                JSONObject obj = (JSONObject)tricepLift.get(i);
-//                
-//                String date = (String) obj.get("date");
-//                int weight = (int)((long) obj.get("weight"));
-//                int reps = (int)((long) obj.get("reps"));
-//                int calories = (int)((long) obj.get("calories"));
-//                
-//                
-//                Log log = new Log(date, weight, reps, calories);
-//                
-//                System.out.println(log + "\n");
-//                
-//            }
-//            
+            
+            JSONArray tricepJson = (JSONArray)exerciseListJson.get("Tricep");
+            
+            if(!tricepJson.isEmpty())
+            {
+                for (int i = 0; i < tricepJson.size(); i++)
+                {
+                    JSONObject obj = (JSONObject)tricepJson.get(i);
+
+                    String date = (String) obj.get("date");
+                    int weight = (int)((long) obj.get("weight"));
+                    int reps = (int)((long) obj.get("reps"));
+                    int calories = (int)((long) obj.get("calories"));
+
+
+                    Log log = new Log(date, weight, reps, calories);
+
+                    System.out.println(log + "\n");
+
+                }
+            }
             
             
-//            JSONArray squat = (JSONArray)exerciseList.get("squat");
-//            
-//            for (int i = 0; i < squat.size(); i++)
-//            {
-//                JSONObject obj = (JSONObject)squat.get(i);
-//                
-//                String date = (String) obj.get("date");
-//                int weight = (int)((long) obj.get("weight"));
-//                int reps = (int)((long) obj.get("reps"));
-//                int calories = (int)((long) obj.get("calories"));
-//                
-//                
-//                Log log = new Log(date, weight, reps, calories);
-//                
-//                System.out.println(log + "\n");
-//                
-//            }
+            JSONArray squatJson = (JSONArray)exerciseListJson.get("Squat");
             
+            if(!squatJson.isEmpty())
+            {
+                for (int i = 0; i < squatJson.size(); i++)
+                {
+                    JSONObject obj = (JSONObject)squatJson.get(i);
+                
+                    String date = (String) obj.get("date");
+                    int weight = (int)((long) obj.get("weight"));
+                    int reps = (int)((long) obj.get("reps"));
+                    int calories = (int)((long) obj.get("calories"));
+
+
+                    Log log = new Log(date, weight, reps, calories);
+
+                    System.out.println(log + "\n");
+
+                }
+            }
             
-//            JSONArray deadLift = (JSONArray)exerciseListJson.get("deadLift");
-//            
-//            for (int i = 0; i < deadLift.size(); i++)
-//            {
-//                JSONObject obj = (JSONObject)deadLift.get(i);
-//                
-//                String date = (String) obj.get("date");
-//                int weight = (int)((long) obj.get("weight"));
-//                int reps = (int)((long) obj.get("reps"));
-//                int calories = (int)((long) obj.get("calories"));
-//                
-//                
-//                Log log = new Log(date, weight, reps, calories);
-//                
-//                System.out.println(log + "\n");
-//                
-//            }
-//            
-//            
-//            JSONArray benchPress = (JSONArray)exerciseList.get("benchPress");
-//            
-//            for (int i = 0; i < benchPress.size(); i++)
-//            {
-//                JSONObject obj = (JSONObject)benchPress.get(i);
-//                
-//                String date = (String) obj.get("date");
-//                int weight = (int)((long) obj.get("weight"));
-//                int reps = (int)((long) obj.get("reps"));
-//                int calories = (int)((long) obj.get("calories"));
-//                
-//                
-//                Log log = new Log(date, weight, reps, calories);
-//                
-//                System.out.println(log + "\n");
-//                
-//            }
-                     
+            JSONArray deadLiftJson = (JSONArray)exerciseListJson.get("DeadLift");
+            
+            if(!deadLiftJson.isEmpty())
+            {
+                for (int i = 0; i < deadLiftJson.size(); i++)
+                {
+                    JSONObject obj = (JSONObject)deadLiftJson.get(i);
+
+                    String date = (String) obj.get("date");
+                    int weight = (int)((long) obj.get("weight"));
+                    int reps = (int)((long) obj.get("reps"));
+                    int calories = (int)((long) obj.get("calories"));
+
+
+                    Log log = new Log(date, weight, reps, calories);
+
+                    System.out.println(log + "\n");
+
+                }
+            }
+            
+            JSONArray benchPressJson = (JSONArray)exerciseListJson.get("BenchPress");
+            
+            if(!benchPressJson.isEmpty())
+            {
+                for (int i = 0; i < benchPressJson.size(); i++)
+                {
+                    JSONObject obj = (JSONObject)benchPressJson.get(i);
+
+                    String date = (String) obj.get("date");
+                    int weight = (int)((long) obj.get("weight"));
+                    int reps = (int)((long) obj.get("reps"));
+                    int calories = (int)((long) obj.get("calories"));
+
+
+                    Log log = new Log(date, weight, reps, calories);
+
+                    System.out.println(log + "\n");
+
+                }
+            }     
         }
         catch (FileNotFoundException | ParseException ex) 
         {
@@ -203,50 +216,48 @@ public class TestData
     
     private static void deleteLog(int index)
     {
-        bicepLift.remove(index);
-        bicepLiftJson.remove(index);
+        bicep.remove(index);
+        bicepJson.remove(index);
     }
     
     private static void addLog(String date, int weight, int reps, int calories)
     {
         Log log = new Log(date, weight, reps, calories);
-        bicepLift.add(log);
-        bicepLiftJson.add(log);
+        bicep.add(log);
+        bicepJson.add(log);
     }
     
     
     private static void addLog(String date, int calories)
     {
         Log log = new Log(date, calories);
-        bicepLift.add(log);
+        bicep.add(log);
         //bicepLiftJson.add(log);
     }
     
     private static void addLog(String date, int weight, int reps)
     {
         Log log = new Log(date, weight, reps);
-        bicepLift.add(log);
+        bicep.add(log);
         //bicepLiftJson.add(log);
     }
     
     private static void saveFile()
     {
-        File file = new File("after.txt");
+        File file = new File("changeTest.json");
         
         try(PrintWriter pw = new PrintWriter(file);)
         {
-            // need to add new library " json-lib-2.2.2-jdk15.jar "
-            //bicepLiftJson = JSONArray.fromObject(bicepLift);
             
             JSONObject root = new JSONObject();
             
-            root.put("Name", account.getName());
-            root.put("Age", account.getAge());
-            root.put("Gender", account.getGender());
+            root.put(NAME, account.getName());
+            root.put(AGE, account.getAge());
+            root.put(GENDER, account.getGender());
             
             JSONObject exlist = new JSONObject();
             
-            exlist.put("bicepLift", bicepLiftJson);
+            exlist.put("BicepLift", bicepJson);
             //exlist.put("tricepLift", tricepLiftJson);
             //exlist.put("squat", squatJson);
             
@@ -260,8 +271,6 @@ public class TestData
             System.out.println(ex);
         }
         
-        System.out.println(file.getName() + "has successfully saved!");
-        
-    }
-    
+        System.out.println(file.getName() + " has successfully saved!");        
+    }    
 }

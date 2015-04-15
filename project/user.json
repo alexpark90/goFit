@@ -1,9 +1,9 @@
 {
-    "name": "Alex Park",
-    "age": 25,
-    "gender": "F",
-    "exerciseList": {
-        "bicepLift": [
+    "Name": "Alex Park",
+    "Age": 25,
+    "Gender": "F",
+    "ExerciseList": {
+        "Bicep": [
             {
                 "date": "Jan-11-2015",
                 "weight": 10,
@@ -23,7 +23,7 @@
                 "calories": 500
             }
         ],
-        "tricepLift": [
+        "Tricep": [
             {
                 "date": "Jan-11-2015",
                 "weight": 30,
@@ -43,10 +43,10 @@
                 "calories": 400
             }
         ],
-        "squat": [
-            "null"
+        "Squat": [
+            
         ],
-        "deadLift": [
+        "DeadLift": [
             {
                 "date": "Jan-11-2015",
                 "weight": 100,
@@ -66,8 +66,8 @@
                 "calories": 300
             }
         ],
-        "benchPress" [
-             "null"
+        "BenchPress" [
+
         ]
     }
 }

@@ -5,13 +5,22 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.*;
 import javax.swing.event.*;
+import org.json.simple.JSONObject;
+import static project.TestData.AGE;
+import static project.TestData.GENDER;
+import static project.TestData.NAME;
 
 
 /////////////////////////////////////////////////////
@@ -26,17 +35,30 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
 {
     /////////////////////////// FIELDS /////////////////////////////
     
-    CardLayout cards = new CardLayout();
-    JPanel cardPanel;
+    private SubGui child;
+    
     final static String HOME = "HOME";
     final static String ENTRY = "ENTRY";
     final static String LOGS = "LOGS";
     final static String GRAPHS = "GRAPHS";
     final static String[] MENU_LIST = {HOME, ENTRY, LOGS, GRAPHS};
     
-    private SubGui child;
+    final static String[] EXERCISE_LIST = {"Bicep", "Tricep", "DeadLift", "BackExtension", "Squat", "LegPress", "BenchPress",};
+    
     
     private UserAccount account;
+    private ArrayList<Exercise> exerciseList; 
+    private Exercise bicep;
+    private Exercise tricep;
+    private Exercise deadLift;
+    private Exercise backExtension;
+    private Exercise squat;
+    private Exercise legPress;
+    private Exercise benchPress;
+    
+    
+    CardLayout cards = new CardLayout();
+    JPanel cardPanel;
     
     JPanel card1 = new JPanel();
     JPanel card2 = new JPanel();
@@ -44,7 +66,8 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     JPanel card4 = new JPanel();
     JList menu = new JList();
     
-
+    File file;
+            
     public MainGui()
     {
         // set the JFrame's layout to BorderLayout
@@ -181,12 +204,46 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         // code to open the file...
     }
     
+    private void saveFile()
+    {
+        // code to save the file...
+    }
     
     @Override
     public void onChildUpdate(String name, String age, String gender)
     {
         account = new UserAccount(name, Integer.parseInt(age), gender.charAt(0));
         System.out.println(account);  // ------> for debugging
+        
+        // below code will be substitued to calling saveFile method
+        
+        String fileName = name.replace(" ", "_");
+        
+        file = new File(fileName+".json");
+        
+        try(PrintWriter pw = new PrintWriter(file);)
+        {
+            
+            JSONObject root = new JSONObject();
+            
+            root.put(NAME, account.getName());
+            root.put(AGE, account.getAge());
+            root.put(GENDER, account.getGender());
+            
+            JSONObject exlist = new JSONObject();
+            
+            
+            root.put("ExerciseList", exlist);
+            
+            pw.printf(root.toJSONString());
+        } 
+        catch (FileNotFoundException ex)
+        {
+            System.out.println(ex);
+        }
+        
+        JOptionPane.showMessageDialog(null, "Your account created successfully!", "Notify", 
+                    JOptionPane.PLAIN_MESSAGE);
     }
 
     @Override

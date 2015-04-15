@@ -83,7 +83,7 @@ public class SubGui extends JFrame implements ValidateInput
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 20));
         
         JButton createBtn = new JButton("Create");
-        JButton cancelBtn = new JButton("Cancel");
+        JButton resetBtn = new JButton("Reset");
                 
         createBtn.addActionListener(new ActionListener() 
         {
@@ -95,31 +95,49 @@ public class SubGui extends JFrame implements ValidateInput
                 SubGui.this.dispose();
             }
         });
-                
-        cancelBtn.addActionListener(new ActionListener() 
+                        
+        resetBtn.addActionListener(new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent e) 
             {
                 // get the user response using confirmDialog to double check the user's intention.
-                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure you?", 
+                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure, jackass?", 
                         "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
                 // only if the user click yes
                 if(reponse == JOptionPane.YES_OPTION)
                 {
-                    SubGui.this.dispose();
+                    reset();
                 }
             }
         });
-        
+
+                
+//        cancelBtn.addActionListener(new ActionListener() 
+//        {
+//            @Override
+//            public void actionPerformed(ActionEvent e) 
+//            {
+//                // get the user response using confirmDialog to double check the user's intention.
+//                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure, jackass?", 
+//                        "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+//
+//                // only if the user click yes
+//                if(reponse == JOptionPane.YES_OPTION)
+//                {
+//                    SubGui.this.dispose();
+//                }
+//            }
+//        });
+//        
         bottomPanel.add(createBtn);
-        bottomPanel.add(cancelBtn);
+        bottomPanel.add(resetBtn);
 
         //  add the bottomPanel to the frame
         add(bottomPanel);
     }
-
+    
     
     @Override
     public boolean validateInput()
@@ -130,5 +148,8 @@ public class SubGui extends JFrame implements ValidateInput
     @Override
     public void reset()
     {
+        nameField.setText("");
+        ageField.setText("");
+        genderBox.setSelectedIndex(0);
     }
 }
