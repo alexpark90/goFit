@@ -82,7 +82,7 @@ public class Log
     @Override
     public String toString()
     {
-        return String.format("%-10s %-10s lbs %-10d", date, getRm(), calories);
+        return String.format("%-10s %5s lbs %5d calories", date, getRm(), calories);
     }
     
 }

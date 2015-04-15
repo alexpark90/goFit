@@ -12,14 +12,14 @@ import java.util.ArrayList;
 //
 /////////////////////////////////////////////////////
 
-public class ExerciseList extends ArrayList<Log> 
+public class Exercise extends ArrayList<Log> 
 {
     ///////////////////////// FIELDS /////////////////////////
     private String type;
 
     
     /////////////////////////// CONSTRUCTOR ////////////////////////
-    public ExerciseList(String type) throws IllegalArgumentException
+    public Exercise(String type) throws IllegalArgumentException
     {
         if(type.equals(""))
         {

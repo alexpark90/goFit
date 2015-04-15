@@ -27,7 +27,7 @@ public final class RM
     
     public static int calculateRM(int weight, int reps)
     {
-        return (int)Math.round(weight - (1 + FOMULA - (FOMULA * reps)));
+        return (int)Math.round(weight / (1 + FOMULA - (FOMULA * reps)));
     }
     
     public int getRMatPercentages(int percentages)

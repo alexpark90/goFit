@@ -1,7 +1,7 @@
 {
     "name": "Alex Park",
-    "age": "25",
-    "sex": "F",
+    "age": 25,
+    "gender": "F",
     "exerciseList": {
         "bicepLift": [
             {
@@ -38,8 +38,8 @@
             },
             {
                 "date": "Jan-16-2015",
-                "weight": "40",
-                "reps": "30",
+                "weight": 40,
+                "reps": 30,
                 "calories": 400
             }
         ],
