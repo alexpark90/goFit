@@ -1,7 +1,6 @@
 
 package project;
 
-/////////////////////////////////////////////////////
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,8 +10,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/////////////////////////////////////////////////////
 //
-// AUTHOR : Alex Park
+// AUTHOR : Alex Park & Chris Sarvghadi
 // CREATE : 14-Apr-2015
 // UPDATE :
 //
@@ -40,15 +40,15 @@ public class TestData
             
             JSONParser parser = new JSONParser();
             
-            JSONObject rootObject = (JSONObject) parser.parse(jsonString);
+            JSONObject root = (JSONObject) parser.parse(jsonString);
             
-            JSONObject exercise = (JSONObject) rootObject.get("exercise");
+            JSONObject exerciseList = (JSONObject) root.get("exerciseList");
             
-            JSONArray type = (JSONArray)exercise.get("bicepLift");
+            JSONArray bicepLift = (JSONArray)exerciseList.get("bicepLift");
             
-            for (int i = 0; i < type.size(); i++)
+            for (int i = 0; i < bicepLift.size(); i++)
             {
-                JSONObject obj = (JSONObject)type.get(i);
+                JSONObject obj = (JSONObject)bicepLift.get(i);
                 
                 String date = (String) obj.get("date");
                 long weight = (long) obj.get("weight");

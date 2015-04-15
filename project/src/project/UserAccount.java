@@ -20,7 +20,7 @@ public class UserAccount
     private String name;
     private int age;
     private char gender;
-    private ArrayList<Exercise> exerciseList;
+    private ArrayList<ExerciseList> exerciseList;
     private Date createdDate; 
     
     ///////////////////////// CONSTRUCTOR //////////////////////
@@ -55,7 +55,7 @@ public class UserAccount
         return gender;
     }
 
-    public ArrayList<Exercise> getExerciseList()
+    public ArrayList<ExerciseList> getExerciseList()
     {
         return exerciseList;
     }

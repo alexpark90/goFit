@@ -2,7 +2,7 @@
     "name": "Alex Park",
     "age": "25",
     "sex": "F",
-    "exercise": {
+    "exerciseList": {
         "bicepLift": [
             {
                 "date": "Jan-11-2015",
