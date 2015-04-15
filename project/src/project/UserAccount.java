@@ -21,7 +21,7 @@ public class UserAccount
     private int age;
     private char gender;
     private ArrayList<Exercise> exerciseList;
-    private Date createdDate; 
+    //private Date createdDate; 
     
     ///////////////////////// CONSTRUCTOR //////////////////////
 
@@ -35,7 +35,7 @@ public class UserAccount
         this.name = name;
         this.age = age;
         this.gender = gender;
-        createdDate = new Date();
+        //createdDate = new Date();
     }
 
     ////////////////////////// METHODS /////////////////////////////////
@@ -59,11 +59,18 @@ public class UserAccount
     {
         return exerciseList;
     }
+
+    public void setExerciseList(ArrayList<Exercise> exerciseList)
+    {
+        this.exerciseList = exerciseList;
+    }
+    
+    
     
     @Override
     public String toString()
     {
-        return String.format("Name: %s, Age: %d, Gender: %s, Created on %s", name, age, gender, createdDate);
+        return String.format("Name: %s, Age: %d, Gender: %s", name, age, gender);
     }
     
 }

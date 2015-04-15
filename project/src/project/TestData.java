@@ -4,6 +4,8 @@ package project;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,20 +30,32 @@ public class TestData
 {
     
 
-    File file;
+    static File file;
     
-    JSONObject rootJson;
-    JSONObject exerciseListJson;
-    //JSONArray exerciseTypeJson;
+    static JSONObject rootJson;
+    static JSONObject exerciseListJson;
+    static JSONArray bicepLiftJson;
     
-    Exercise exerciseType = new Exercise("bicepLift");
+    static UserAccount account;
+    static ArrayList<Exercise> exerciseList;
+    static Exercise bicepLift = new Exercise("bicepLift");
     
     public static void main(String[] args)
     {
+           openFile();
+           deleteLog(2);
+           
+           System.out.println(bicepLift);
+           
+           addLog("2015-Apr-14", 100, 12, 300);
+           
+           System.out.println(bicepLift);
+           
+           saveFile();
            
     }
     
-    private void openFile()
+    private static void openFile()
     {
         
         file = new File("user.txt");
@@ -65,22 +79,26 @@ public class TestData
             // root represents one instance of UserAccount 
             rootJson = (JSONObject) parser.parse(jsonString);
             
+            
             String name = (String) rootJson.get("name");
             int age = (int)((long) rootJson.get("age"));
             char gender = ((String)rootJson.get("gender")).charAt(0);
             
-            System.out.println(name + " " + age  + " " + gender);
+            account = new UserAccount(name, age, gender);
             
-            // exerciseList contains an array of different kinds of exercise
+            System.out.println(account);
+            
+            // exerciseListJson contains an array of different kinds of exercise
             exerciseListJson = (JSONObject) rootJson.get("exerciseList");
             
             
-            // bicepLift contains an array of daily logs
-            JSONArray bicepLift = (JSONArray)exerciseListJson.get("bicepLift");
+            // bicepLiftJson contains an array of daily logs
+            bicepLiftJson = (JSONArray)exerciseListJson.get("bicepLift");
             
-            for (int i = 0; i < bicepLift.size(); i++)
+            
+            for (int i = 0; i < bicepLiftJson.size(); i++)
             {
-                JSONObject obj = (JSONObject)bicepLift.get(i);
+                JSONObject obj = (JSONObject)bicepLiftJson.get(i);
                 
                 String date = (String) obj.get("date");
                 int weight = (int)((long) obj.get("weight"));
@@ -95,6 +113,9 @@ public class TestData
                 System.out.println(log + "\n");
                 
             }
+            
+            //exerciseList.add(bicepLift);
+            //account.setExerciseList(exerciseList);
             
 //            
 //            JSONArray tricepLift = (JSONArray)exerciseListJson.get("tricepLift");
@@ -180,8 +201,66 @@ public class TestData
         }
     }
     
-    private void delete()
+    private static void deleteLog(int index)
     {
+        bicepLift.remove(index);
+        bicepLiftJson.remove(index);
+    }
+    
+    private static void addLog(String date, int weight, int reps, int calories)
+    {
+        Log log = new Log(date, weight, reps, calories);
+        bicepLift.add(log);
+        bicepLiftJson.add(log);
+    }
+    
+    
+    private static void addLog(String date, int calories)
+    {
+        Log log = new Log(date, calories);
+        bicepLift.add(log);
+        //bicepLiftJson.add(log);
+    }
+    
+    private static void addLog(String date, int weight, int reps)
+    {
+        Log log = new Log(date, weight, reps);
+        bicepLift.add(log);
+        //bicepLiftJson.add(log);
+    }
+    
+    private static void saveFile()
+    {
+        File file = new File("after.txt");
+        
+        try(PrintWriter pw = new PrintWriter(file);)
+        {
+            // need to add new library " json-lib-2.2.2-jdk15.jar "
+            //bicepLiftJson = JSONArray.fromObject(bicepLift);
+            
+            JSONObject root = new JSONObject();
+            
+            root.put("Name", account.getName());
+            root.put("Age", account.getAge());
+            root.put("Gender", account.getGender());
+            
+            JSONObject exlist = new JSONObject();
+            
+            exlist.put("bicepLift", bicepLiftJson);
+            //exlist.put("tricepLift", tricepLiftJson);
+            //exlist.put("squat", squatJson);
+            
+            
+            root.put("ExerciseList", exlist);
+            
+            pw.printf(root.toJSONString());
+        } 
+        catch (FileNotFoundException ex)
+        {
+            System.out.println(ex);
+        }
+        
+        System.out.println(file.getName() + "has successfully saved!");
         
     }
     
