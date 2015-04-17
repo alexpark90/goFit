@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 //
 // AUTHOR : Alex Park & Chris Sarvghadi
 // CREATE : 7-Apr-2015
-// UPDATE :
+// UPDATE : 14-Apr-2015
 //
 /////////////////////////////////////////////////////
 
@@ -30,7 +30,9 @@ public class Project
         // make it be located in the middle of the screen
         gui.setLocationRelativeTo(null);
         
+        // set the window's title
         gui.setTitle("Go Fit");
+        
         // set the close button to exit the program 
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
