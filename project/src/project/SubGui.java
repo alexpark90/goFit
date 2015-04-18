@@ -28,7 +28,7 @@ public class SubGui extends JFrame implements ValidateInput
     // interface to force the class using the SubGui to implement the abstract method below
     interface TransferData
     {
-        public abstract void onChildUpdate(String name, String age, String gender);
+        public abstract void onChildUpdate(String name, int age, String gender);
     }
     
     /////////////////////// FIELDS //////////////////////
@@ -90,9 +90,17 @@ public class SubGui extends JFrame implements ValidateInput
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                SubGui.this.parent.onChildUpdate(nameField.getText(), ageField.getText(), 
-                        (String)genderBox.getSelectedItem());
-                SubGui.this.dispose();
+                if(validateInput())
+                {
+                    SubGui.this.parent.onChildUpdate(nameField.getText(), Integer.parseInt(ageField.getText()), 
+                            (String)genderBox.getSelectedItem());
+                    SubGui.this.dispose();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "All fields should be filled in", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
                         
@@ -142,6 +150,24 @@ public class SubGui extends JFrame implements ValidateInput
     @Override
     public boolean validateInput()
     {
+        if(nameField.getText().equals("") || ageField.getText().equals(""))
+        {
+            return false;
+        }        
+        try
+        {
+            int age = Integer.parseInt(ageField.getText());
+            if(age < 0)
+            {
+                return false;
+            }
+        }
+        catch(NumberFormatException ex)
+        {
+            JOptionPane.showMessageDialog(null,
+                        "Age must be an positive integer number.", 
+                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
         return true;
     }
 

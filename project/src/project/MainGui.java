@@ -12,8 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -94,6 +92,9 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     JList menu;
     JComboBox exerciseComboBox;
     
+    File file;
+    File directory;
+    
     int index;
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,18 +173,9 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             @Override
             public void actionPerformed(ActionEvent ex)
             {
-                try
+                if(openFile())
                 {
-                    File file = openFile();
                     readJsonFile(file);
-                }
-                catch(FileNotFoundException e)
-                {
-                    System.out.println(e.toString());
-                } 
-                catch (ParseException ex1)
-                {
-                    System.out.println(ex1.toString());
                 }
                 
                 System.out.println(account);  // ---------> for debugging
@@ -344,27 +336,35 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////METHODS////////////////////////////////////////////////
     
-    private File openFile() throws FileNotFoundException
+    private boolean openFile()
     {
-        File file;
         
         // create JFileChooser to open a file from the current directory
-        JFileChooser openChooser = new JFileChooser(new File("."));
+        JFileChooser openChooser = new JFileChooser();
+        
+        if(directory!=null) 
+        {
+            openChooser.setCurrentDirectory(directory);
+        }
+        else
+        {
+            openChooser.setCurrentDirectory(new File("."));
+        }
 
         // show open Dialog so that the user can select the file. 
         // if the user opens a file, it set the file
         if(openChooser.showOpenDialog(MainGui.this) == JFileChooser.APPROVE_OPTION)
         {
             file = openChooser.getSelectedFile();
-            return file;
+            return true;
         }
         else
         {
-            throw new FileNotFoundException();
+            return false;
         }
     }
     
-    private UserAccount readJsonFile(File file) throws FileNotFoundException, ParseException
+    private UserAccount readJsonFile(File file)
     {    
         try 
         {
@@ -406,14 +406,19 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         }
         catch (FileNotFoundException | ParseException ex) 
         {
-            throw ex;
+            System.out.println(ex);
         }
         
         return account;
     }
     
-    private void saveFile(File file)
+    private void saveFile()
     {
+        if(file==null || account==null)
+        {
+            return;
+        }
+        
         try(PrintWriter writer = new PrintWriter(file);)
         {
 //            
@@ -447,18 +452,21 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     }
     
     @Override
-    public void onChildUpdate(String name, String age, String gender)
+    public void onChildUpdate(String name, int age, String gender)
     {
-        account = new UserAccount(name, Integer.parseInt(age), gender.charAt(0));
-        System.out.println(account);  // ------> for debugging
-        
-        child=null;
-        
-        // below code will be substituted to calling saveFile method
-        
-        String fileName = name.replace(" ", "_");
-        
+        String fileName = name.replace(" ", "_");        
         File file = new File(fileName+".json");
+        
+        
+        if(file.exists())
+        {
+            
+            JOptionPane.showMessageDialog(null, "Same Name is already existing", "Notify", 
+                    JOptionPane.PLAIN_MESSAGE);
+            return;
+        }
+        
+        account = new UserAccount(name, age, gender.charAt(0));
         
         try(PrintWriter pw = new PrintWriter(file);)
         {
@@ -481,8 +489,11 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             System.out.println(ex);
         }
         
+        child=null;
         JOptionPane.showMessageDialog(null, "Your account created successfully!", "Notify", 
                     JOptionPane.PLAIN_MESSAGE);
+        
+        System.out.println(account);  // ------> for debugging
     }
 
     @Override
