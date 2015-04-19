@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -96,11 +97,6 @@ public class SubGui extends JFrame implements ValidateInput
                             (String)genderBox.getSelectedItem());
                     SubGui.this.dispose();
                 }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "All fields should be filled in", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
             }
         });
                         
@@ -150,16 +146,36 @@ public class SubGui extends JFrame implements ValidateInput
     @Override
     public boolean validateInput()
     {
-        if(nameField.getText().equals("") || ageField.getText().equals(""))
-        {
-            return false;
-        }        
         try
         {
+            String name = nameField.getText();
             int age = Integer.parseInt(ageField.getText());
-            if(age < 0)
+
+            String fileName = name.replace(" ", "_");        
+            File file = new File(fileName+".json");
+
+            if(name.equals("") || ageField.getText().equals(""))
             {
+                JOptionPane.showMessageDialog(null, "All fields should be filled in.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
+
+            }
+            else if(file.exists())
+            {
+                JOptionPane.showMessageDialog(null, "Same Name is already existing", "Error", 
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            else if(age < 0)
+            {
+                JOptionPane.showMessageDialog(null, "Age must be an positive integer number.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
         catch(NumberFormatException ex)
@@ -167,8 +183,8 @@ public class SubGui extends JFrame implements ValidateInput
             JOptionPane.showMessageDialog(null,
                         "Age must be an positive integer number.", 
                         "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return true;
     }
 
     @Override

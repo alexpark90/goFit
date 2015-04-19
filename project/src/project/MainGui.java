@@ -175,7 +175,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             {
                 if(openFile())
                 {
-                    readJsonFile(file);
+                    readJsonFile();
                 }
                 
                 System.out.println(account);  // ---------> for debugging
@@ -364,7 +364,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         }
     }
     
-    private UserAccount readJsonFile(File file)
+    private UserAccount readJsonFile()
     {    
         try 
         {
@@ -386,13 +386,12 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             accountJson = (JSONObject) parser.parse(jsonString);
             
             
-            String name = (String) accountJson.get(NAME);
-            int age = (int)((long) accountJson.get(AGE));
-            char gender = ((String)accountJson.get(GENDER)).charAt(0);
-            
             // exerciseListJson contains an array of different kinds of exercise
             exerciseListJson = (JSONObject) accountJson.get("ExerciseList");
             
+            String name = (String) accountJson.get(NAME);
+            int age = (int)((long) accountJson.get(AGE));
+            char gender = ((String)accountJson.get(GENDER)).charAt(0);
             account = new UserAccount(name, age, gender);
             
             
@@ -412,11 +411,11 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         return account;
     }
     
-    private void saveFile()
+    private boolean saveFile()
     {
         if(file==null || account==null)
         {
-            return;
+            return false;
         }
         
         try(PrintWriter writer = new PrintWriter(file);)
@@ -447,20 +446,17 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         {
             System.out.println(ex);
         }
-        
-        System.out.println(file.getName() + " has successfully saved!");
+        return true;
     }
     
     @Override
     public void onChildUpdate(String name, int age, String gender)
     {
         String fileName = name.replace(" ", "_");        
-        File file = new File(fileName+".json");
-        
+        file = new File(fileName+".json");
         
         if(file.exists())
         {
-            
             JOptionPane.showMessageDialog(null, "Same Name is already existing", "Notify", 
                     JOptionPane.PLAIN_MESSAGE);
             return;
@@ -468,30 +464,28 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         
         account = new UserAccount(name, age, gender.charAt(0));
         
-        try(PrintWriter pw = new PrintWriter(file);)
-        {
+        accountJson = new JSONObject();
             
-            JSONObject root = new JSONObject();
+        accountJson.put(NAME, account.getName());
+        accountJson.put(AGE, account.getAge());
+        accountJson.put(GENDER, String.valueOf(account.getGender()));
             
-            root.put(NAME, account.getName());
-            root.put(AGE, account.getAge());
-            root.put(GENDER, account.getGender());
-            
-            JSONObject exlist = new JSONObject();
-            
-            
-            root.put("ExerciseList", exlist);
-            
-            pw.printf(root.toJSONString());
-        } 
-        catch (FileNotFoundException ex)
-        {
-            System.out.println(ex);
-        }
+        exerciseListJson = new JSONObject();
         
-        child=null;
-        JOptionPane.showMessageDialog(null, "Your account created successfully!", "Notify", 
+        accountJson.put("ExerciseList", exerciseListJson);
+        
+        
+        if(saveFile())
+        {
+            JOptionPane.showMessageDialog(null, "Your account created successfully!", "Notify", 
                     JOptionPane.PLAIN_MESSAGE);
+            child=null;
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "[Error]What can i say..... umm...", "Notify", 
+                    JOptionPane.PLAIN_MESSAGE);
+        }
         
         System.out.println(account);  // ------> for debugging
     }
