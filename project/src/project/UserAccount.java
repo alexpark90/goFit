@@ -19,8 +19,15 @@ public class UserAccount
     private String name;
     private int age;
     private char gender;
-    private ArrayList<Exercise> exerciseList;
-    //private Date createdDate; 
+    
+    private ArrayList<Exercise> exerciseList;    
+    private Exercise bicep = new Exercise("Bicep");
+    private Exercise tricep = new Exercise("Tricep");
+    private Exercise deadLift = new Exercise("DeadLift");
+    private Exercise backExtension = new Exercise("BackExtension");
+    private Exercise squat = new Exercise("Squat");
+    private Exercise legPress = new Exercise("LegPress");
+    private Exercise benchPress = new Exercise("BenchPress");
     
     ///////////////////////// CONSTRUCTOR //////////////////////
 
@@ -34,7 +41,16 @@ public class UserAccount
         this.name = name;
         this.age = age;
         this.gender = gender;
-        //createdDate = new Date();
+        
+        // initiallize the exerciseList
+        this.exerciseList = new ArrayList(7);
+        exerciseList.add(bicep);
+        exerciseList.add(tricep);
+        exerciseList.add(deadLift);
+        exerciseList.add(backExtension);
+        exerciseList.add(squat);
+        exerciseList.add(legPress);
+        exerciseList.add(benchPress);
     }
 
     ////////////////////////// METHODS /////////////////////////////////

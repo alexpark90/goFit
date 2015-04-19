@@ -4,6 +4,7 @@ package project;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import static javax.swing.SwingConstants.CENTER;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import org.json.simple.JSONArray;
@@ -60,24 +63,9 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     
     
     private UserAccount account;
-    private ArrayList<Exercise> exerciseList;    
-    private Exercise bicep;
-    private Exercise tricep;
-    private Exercise deadLift;
-    private Exercise backExtension;
-    private Exercise squat;
-    private Exercise legPress;
-    private Exercise benchPress;
     
     private JSONObject accountJson;
     private JSONObject exerciseListJson;
-    private JSONArray bicepJson;
-    private JSONArray tricepJson;
-    private JSONArray deadLiftJson;
-    private JSONArray backExtensionJson;
-    private JSONArray squatJson;
-    private JSONArray legPressJson;
-    private JSONArray benchPressJson;
     
     private SubGui child;
     
@@ -95,10 +83,8 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     JLabel logAge;
     JLabel logSex;
 
-    ArrayList<JSONObject> a = new ArrayList<>();
     JList logsList;
     DefaultListModel logsListModel = new DefaultListModel();
-    
     
     JComboBox exerciseComboBoxEntry = new JComboBox(EXERCISE_LIST);
     JComboBox exerciseComboBoxLogs = new JComboBox(EXERCISE_LIST);
@@ -106,13 +92,12 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     File file;
     File directory;
     
-    int index;
-    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////// CONSTRUCTOR ////////////////////////////////////////////
     
     public MainGui()
     {
+        
         // set the JFrame's layout to BorderLayout
         setLayout(new BorderLayout());
 
@@ -183,15 +168,24 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             {
                 if(openFile())
                 {
-                    readJsonFile();
-                    cards.show(cardPanel, LOGS);
+                    account = getFromFile();
                     
-                    logName.setText(NAME + " : " + account.getName());
-                    logAge.setText(AGE + " : " + account.getAge());
-                    logSex.setText(GENDER + " : " + account.getGender());
+                    if(account!=null)
+                    {
+                        cards.show(cardPanel, LOGS);
+
+                        logName.setText(NAME + " : " + account.getName());
+                        logAge.setText(AGE + " : " + account.getAge());
+                        logSex.setText(GENDER + " : " + account.getGender());
+                    }
+                    
+                    if(!logsListModel.isEmpty())
+                    {
+                        logsListModel.clear();
+                    }
+                    logsList.setModel(logsListModel);
                     
                 }
-                System.out.println(account);  // ---------> for debugging
             }              
         });
         
@@ -316,9 +310,9 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         ///////////////////////////// LOGS ////////////////////////////////////////////////////////////////////
         
         // Panels that will go in each section of logsCard page borderlayout
-        JPanel logsPanelNorth = new JPanel(new GridLayout(2, 4, 10, 30));
+        JPanel logsPanelNorth = new JPanel(new GridLayout(2, 4, 5, 30));
         JPanel logsPanelCenter = new JPanel(new BorderLayout());
-        JPanel logsPanelSouth = new JPanel(new GridLayout(1, 3, 10, 0));
+        JPanel logsPanelSouth = new JPanel(new GridLayout(1, 3, 5, 0));
         
         logsPanelNorth.setBorder(new EmptyBorder(10,10,0,20));
         logsPanelCenter.setBorder(new EmptyBorder(0,10,0,20));
@@ -337,16 +331,14 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         logsPanelNorth.add(new JLabel("1RM", JLabel.RIGHT));
         logsPanelNorth.add(new JLabel("Calories", JLabel.RIGHT));
         
-        
         exerciseComboBoxLogs.addActionListener(new ActionListener() 
         {
-        
             @Override
             public void actionPerformed(ActionEvent ex)
             {
-                System.out.println(exerciseComboBoxEntry.getSelectedItem());
+                System.out.println(exerciseComboBoxLogs.getSelectedItem());
                 
-                //exerciseListJson.get(exerciseComboBoxEntry.getSelectedItem());
+                int index = exerciseComboBoxLogs.getSelectedIndex();
                 
                 if(!logsListModel.isEmpty())
                 {
@@ -354,21 +346,28 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
                 }
 
                 // put the elements of socialList into the listModel
-                for (Log log : bicep)
+                for (Log log : account.getExerciseList().get(index))
                 {
                     logsListModel.addElement(log);
                 }
 
                 // set listModel to show it on the JList
                 logsList.setModel(logsListModel);
-
                 
             }
         });
         
         logsList = new JList(logsListModel);
+        
+        logsList.setCellRenderer(new DefaultListCellRenderer()
+        {
+            public int getHorizontalAlignment() 
+            {
+                return CENTER;
+            }
+        });
         JScrollPane logsScrollPane = new JScrollPane(logsList);
-        logsScrollPane.setPreferredSize(new Dimension(200, 150));
+        //logsScrollPane.setPreferredSize(new Dimension(100, 50));
         
         // components added on bottom of logs page
         logsPanelCenter.add(logsScrollPane);
@@ -376,6 +375,51 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         JButton saveBtn = new JButton("Save");
         JButton editBtn = new JButton("Details/Edit");
         JButton deleteBtn = new JButton("Delete");
+        
+        saveBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                if(saveFile())
+                {
+                    JOptionPane.showMessageDialog(null, "Change saved successfully!", "Notify", 
+                                                JOptionPane.PLAIN_MESSAGE);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "[Error] File cannot be saved.", 
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
+        editBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                
+            }
+        });
+        
+        deleteBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure, jackass?", 
+                        "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                // only if the user click yes
+                if(reponse == JOptionPane.YES_OPTION)
+                {
+                    int index = logsList.getSelectedIndex();
+                    deleteLog(index);
+                }
+                
+            }
+        });
         
         logsPanelSouth.add(saveBtn);
         logsPanelSouth.add(editBtn);
@@ -456,8 +500,9 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         }
     }
     
-    private void readJsonFile()
+    private UserAccount getFromFile()
     {    
+        UserAccount acc = null;
         try(Scanner reader = new Scanner(file);) 
         {
             StringBuilder jsonBuilder = new StringBuilder(); 
@@ -475,15 +520,39 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             // root JsonObject represents one instance of UserAccount 
             accountJson = (JSONObject) parser.parse(jsonString);
             
-            // exerciseListJson contains an array of different kinds of exercise
-            exerciseListJson = (JSONObject) accountJson.get("ExerciseList");
             
             String name = (String) accountJson.get(NAME);
             int age = (int)((long) accountJson.get(AGE));
             char gender = ((String)accountJson.get(GENDER)).charAt(0);
             
-            account = new UserAccount(name, age, gender);
+            acc = new UserAccount(name, age, gender);
             
+            // exerciseListJson contains an array of different kinds of exercise
+            exerciseListJson = (JSONObject) accountJson.get("ExerciseList");
+            
+            for (int i = 0; i < EXERCISE_LIST.length; i++)
+            {
+                JSONArray jsonarray = (JSONArray)exerciseListJson.get(EXERCISE_LIST[i]);
+                
+                if(!jsonarray.isEmpty())
+                {
+                    for (int j = 0; j < jsonarray.size(); j++)
+                    {
+                            JSONObject obj = (JSONObject)jsonarray.get(j);
+
+                            String date = (String) obj.get("date");
+                            int weight = (int)((long) obj.get("weight"));
+                            int reps = (int)((long) obj.get("reps"));
+                            int calories = (int)((long) obj.get("calories"));
+
+                            Log log = new Log(date, weight, reps, calories);
+
+                            acc.getExerciseList().get(i).add(log);
+                    }
+                }
+            }
+            
+                        
         }
         catch(FileNotFoundException ex) 
         {
@@ -493,13 +562,20 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         {
             System.out.println("The file cannot be opend.");
         }
-        
+        return acc;
     }
     
-    private boolean update()
+    private boolean deleteLog(int index)
     {
-        exerciseListJson.replace(EXERCISE_LIST[index], exerciseComboBoxEntry.getSelectedItem());
+        int chosenExercise = exerciseComboBoxLogs.getSelectedIndex();
+        account.getExerciseList().get(chosenExercise).remove(index);
+        JSONArray jsonarray = (JSONArray) exerciseListJson.get(EXERCISE_LIST[chosenExercise]);
+        jsonarray.remove(index);
+        exerciseListJson.replace(EXERCISE_LIST[chosenExercise], jsonarray);
         accountJson.replace("ExerciseList", exerciseListJson);
+
+        // remove the clicked item from the list
+        logsListModel.removeElement(logsList.getSelectedValue());
         return true;    
     }
     
@@ -544,8 +620,12 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             
         exerciseListJson = new JSONObject();
         
-        accountJson.put("ExerciseList", exerciseListJson);
+        for(int i = 0; i < EXERCISE_LIST.length; i++)
+        {
+            exerciseListJson.put(EXERCISE_LIST[i], new JSONArray());
+        }
         
+        accountJson.put("ExerciseList", exerciseListJson);
         
         if(saveFile())
         {
@@ -558,8 +638,21 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             JOptionPane.showMessageDialog(null, "[Error]What can i say..... umm...", "Notify", 
                     JOptionPane.PLAIN_MESSAGE);
         }
-        
-        System.out.println(account);  // ------> for debugging
+
+        if(account!=null)
+        {
+            cards.show(cardPanel, LOGS);
+
+            logName.setText(NAME + " : " + account.getName());
+            logAge.setText(AGE + " : " + account.getAge());
+            logSex.setText(GENDER + " : " + account.getGender());
+        }
+
+        if(!logsListModel.isEmpty())
+        {
+            logsListModel.clear();
+        }
+        logsList.setModel(logsListModel);
     }
 
     
