@@ -2,6 +2,7 @@
 package project;
 
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,12 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 /////////////////////////////////////////////////////
 //
 // AUTHOR : Alex Park & Chris Sarvghadi
 // CREATE : 7-Apr-2015
-// UPDATE : 14-Apr-2015
+// UPDATE : 18-Apr-2015
 //
 /////////////////////////////////////////////////////
 
@@ -47,12 +49,14 @@ public class SubGui extends JFrame implements ValidateInput
         super("Create new Account");
 
         this.parent = parent;
+        this.setPreferredSize(new Dimension(250, 300));
         
         // set the JFrame's layout to GridLayout
         setLayout(new GridLayout(4, 1));
 
         // create JPanel for getting a name from the user
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
+        namePanel.setBorder(new EmptyBorder(15, 50, 0, 0));
 
         namePanel.add(new JLabel(String.format("%-10s", "Name :")));
         namePanel.add(nameField);
@@ -63,6 +67,7 @@ public class SubGui extends JFrame implements ValidateInput
         
         // create JPanel for getting a name from the user
         JPanel agePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
+        agePanel.setBorder(new EmptyBorder(0, 50, 0, 0));
 
         agePanel.add(new JLabel(String.format("%-13s", "Age :")));
         agePanel.add(ageField);
@@ -73,6 +78,7 @@ public class SubGui extends JFrame implements ValidateInput
         
         // create JPanel for getting a name from the user
         JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
+        genderPanel.setBorder(new EmptyBorder(0, 50, 0, 0));
 
         genderPanel.add(new JLabel(String.format("%-10s", "Gender :")));
         genderPanel.add(genderBox);
