@@ -5,11 +5,11 @@ package project;
 //
 // AUTHOR : Alex Park & Chris Sarvghadi
 // CREATE : 7-Apr-2015
-// UPDATE : 14-Apr-2015
+// UPDATE : 19-Apr-2015
 //
 /////////////////////////////////////////////////////
 
-public class Log 
+public class Log
 {
     ///////////////////////// FIELDS ///////////////////////
     
@@ -20,28 +20,19 @@ public class Log
     
     //////////////////////// CONSTRUCTORS ///////////////////////
 
-    public Log(String date, int weight, int reps) throws IllegalArgumentException
-    {
-        this(date, weight, reps, 0);
-    }
-
-    public Log(String date, int calories) throws IllegalArgumentException
-    {
-        this(date, 0, 0, calories);
-    }
-
     /**
      *
      * @param date
      * @param weight
      * @param reps
      * @param calories
+     * @throws project.ValidateInput.InvalidInputException
      */
-    public Log(String date, int weight, int reps, int calories) throws IllegalArgumentException
+    public Log(String date, int weight, int reps, int calories) throws ValidateInput.InvalidInputException
     {
         if(date.equals("") || weight < 0 || reps < 0 || calories < 0)
         {
-             throw new IllegalArgumentException("Date cannot be empty character. " 
+             throw new ValidateInput.InvalidInputException("Date cannot be empty character. " 
                      + "Weight, reps, and calories should be more than 0. ");
         }
         
@@ -82,7 +73,6 @@ public class Log
     @Override
     public String toString()
     {
-        return String.format("%-5s %20s lbs %20d calories", date, getRm(), calories);
+        return String.format("%20s %25s lbs %25d cal", date, RM.calculateRM(weight, reps)+"lbs", calories);
     }
-    
 }

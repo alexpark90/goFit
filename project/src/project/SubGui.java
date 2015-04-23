@@ -21,7 +21,7 @@ import javax.swing.border.EmptyBorder;
 //
 // AUTHOR : Alex Park & Chris Sarvghadi
 // CREATE : 7-Apr-2015
-// UPDATE : 18-Apr-2015
+// UPDATE : 22-Apr-2015
 //
 /////////////////////////////////////////////////////
 
@@ -97,11 +97,18 @@ public class SubGui extends JFrame implements ValidateInput
             @Override
             public void actionPerformed(ActionEvent e) 
             {
-                if(validateInput())
-                {
+                try
+                {    
+                    validateInput();
                     SubGui.this.parent.onChildUpdate(nameField.getText(), Integer.parseInt(ageField.getText()), 
                             (String)genderBox.getSelectedItem());
                     SubGui.this.dispose();
+                }
+                catch(InvalidInputException eex)
+                {
+                    JOptionPane.showMessageDialog(null, eex.getMessage(), 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
                 }
             }
         });
@@ -122,25 +129,7 @@ public class SubGui extends JFrame implements ValidateInput
                 }
             }
         });
-
-                
-//        cancelBtn.addActionListener(new ActionListener() 
-//        {
-//            @Override
-//            public void actionPerformed(ActionEvent e) 
-//            {
-//                // get the user response using confirmDialog to double check the user's intention.
-//                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure, jackass?", 
-//                        "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-//
-//                // only if the user click yes
-//                if(reponse == JOptionPane.YES_OPTION)
-//                {
-//                    SubGui.this.dispose();
-//                }
-//            }
-//        });
-//        
+        
         bottomPanel.add(createBtn);
         bottomPanel.add(resetBtn);
 
@@ -150,7 +139,7 @@ public class SubGui extends JFrame implements ValidateInput
     
     
     @Override
-    public boolean validateInput()
+    public void validateInput() throws InvalidInputException
     {
         try
         {
@@ -162,34 +151,20 @@ public class SubGui extends JFrame implements ValidateInput
 
             if(name.equals("") || ageField.getText().equals(""))
             {
-                JOptionPane.showMessageDialog(null, "All fields should be filled in.", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-
+                throw new InvalidInputException("All fields should be filled in");
             }
             else if(file.exists())
             {
-                JOptionPane.showMessageDialog(null, "Same Name is already existing", "Error", 
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
+                throw new InvalidInputException("Same named file already exists.");
             }
             else if(age < 0)
             {
-                JOptionPane.showMessageDialog(null, "Age must be an positive integer number.", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            else
-            {
-                return true;
+                throw new InvalidInputException("Age must be an positive integer number.");
             }
         }
         catch(NumberFormatException ex)
         {
-            JOptionPane.showMessageDialog(null,
-                        "Age must be an positive integer number.", 
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+            throw new InvalidInputException("Age must be an positive integer number.");
         }
     }
 

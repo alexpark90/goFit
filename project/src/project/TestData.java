@@ -43,7 +43,7 @@ public class TestData
     static ArrayList<Exercise> exerciseList;
     static Exercise bicep = new Exercise("Bicep");
     
-    public static void main(String[] args)
+    public static void main(String[] args) throws ValidateInput.InvalidInputException
     {
            openFile();
            deleteLog(2);
@@ -58,7 +58,7 @@ public class TestData
            
     }
     
-    private static void openFile()
+    private static void openFile() throws ValidateInput.InvalidInputException
     {
         
         file = new File("user.json");
@@ -220,27 +220,13 @@ public class TestData
         bicepJson.remove(index);
     }
     
-    private static void addLog(String date, int weight, int reps, int calories)
+    private static void addLog(String date, int weight, int reps, int calories) throws ValidateInput.InvalidInputException
     {
         Log log = new Log(date, weight, reps, calories);
         bicep.add(log);
         bicepJson.add(log);
     }
     
-    
-    private static void addLog(String date, int calories)
-    {
-        Log log = new Log(date, calories);
-        bicep.add(log);
-        //bicepLiftJson.add(log);
-    }
-    
-    private static void addLog(String date, int weight, int reps)
-    {
-        Log log = new Log(date, weight, reps);
-        bicep.add(log);
-        //bicepLiftJson.add(log);
-    }
     
     private static void saveFile()
     {

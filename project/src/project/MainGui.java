@@ -6,30 +6,16 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import static javax.swing.SwingConstants.CENTER;
-import javax.swing.border.*;
-import javax.swing.event.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,7 +26,7 @@ import org.json.simple.parser.ParseException;
 //                                                 
 // AUTHOR : Alex Park & Chris Sarvghadi            
 // CREATE : 7-Apr-2015                            
-// UPDATE : 19-Apr-2015                                       
+// UPDATE : 22-Apr-2015                                       
 //                                                 
 /////////////////////////////////////////////////////
 
@@ -48,36 +34,37 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
 {
     ///////////////////////////////// FIELDS //////////////////////////////////
     
-    
     final static String HOME = "HOME";
     final static String ENTRY = "ENTRY";
     final static String LOGS = "LOGS";
     final static String GRAPHS = "GRAPHS";
     final static String[] MENU_LIST = {HOME, ENTRY, LOGS, GRAPHS};
     
-    
     final static String NAME = "Name";
     final static String AGE = "Age";
     final static String GENDER = "Gender";
     final static String[] EXERCISE_LIST = {"Bicep", "Tricep", "DeadLift", "BackExtension", "Squat", "LegPress", "BenchPress",};
-    
-    
+        
     private UserAccount account;
-    
     private JSONObject accountJson;
     private JSONObject exerciseListJson;
     
-    private SubGui child;
-    
-    JPanel menuPanel = new JPanel();    
-    
+    SubGui child;
+        
     CardLayout cards = new CardLayout();
-    JPanel cardPanel;
+    JPanel centerPanel;
     
-    JPanel homeCard = new JPanel();
+    JPanel homeCard = new JPanel(new BorderLayout());
     JPanel entryCard = new JPanel(new BorderLayout());
     JPanel logsCard = new JPanel(new BorderLayout());
     JPanel graphsCard = new JPanel();
+    
+    JTextField dateField = new JTextField(10);
+    JTextField weightField = new JTextField(10);
+    JTextField repsField = new JTextField(10);
+    JTextField caloriesField = new JTextField(10);
+    
+    JLabel[] rmLabels = new JLabel[11];
     
     JLabel logName;
     JLabel logAge;
@@ -91,27 +78,27 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     
     File file;
     File directory;
+    boolean editMode = false;
     
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////// CONSTRUCTOR ////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////// CONSTRUCTOR ///////////////////////////////////////////////////
     
     public MainGui()
     {
-        
-        // set the JFrame's layout to BorderLayout
-        setLayout(new BorderLayout());
 
         //////////////////////////////////////// WEST //////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        // create menu Jlist and put MENU_LIST to menu to show the elements in it
-        
+        // create menu JList and put MENU_LIST to menu to show the elements in it       
         JList menu = new JList();
         menu.setListData(MENU_LIST);
         
-        // set the menu's border and padding 
-        menu.setBorder(new EmptyBorder(0, 5, 200, 5));
-        menu.setFixedCellHeight(25);
+        // set the menu's border and cells size and allighnment
+        menu.setBorder(new EmptyBorder(10, 0, 200, 0));
+        menu.setFixedCellHeight(30);
+        menu.setFixedCellWidth(80);
+        DefaultListCellRenderer renderer =  (DefaultListCellRenderer)menu.getCellRenderer();  
+        renderer.setHorizontalAlignment(JLabel.CENTER); 
         
         // add the listener to the menu
         menu.addListSelectionListener(new ListSelectionListener() 
@@ -119,9 +106,10 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             @Override
             public void valueChanged(ListSelectionEvent e)
             {
-                cards.show(cardPanel, (String)menu.getSelectedValue());
-                if(account!=null && menu.getSelectedValue()==LOGS)
+                // only if the account is set up and not in editMode
+                if(account!=null && !editMode)
                 {
+                    cards.show(centerPanel, (String)menu.getSelectedValue());
                 }
             }
         });
@@ -130,18 +118,31 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         JSeparator menuSeparator = new JSeparator(SwingConstants.VERTICAL);
         menuSeparator.setPreferredSize(new Dimension(5, 310));
     
-        //////////////////////////////////////// CENTER /////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// CENTER ///////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         // set the cardPanel's layout to the cardLayout
-        cardPanel = new JPanel(cards);
+        centerPanel = new JPanel(cards);
         
         
-        ///////////////////////////// HOME //////////////////////////////////////////////////////////////////
+        ////////////////////////////////////// HOME card ///////////////////////////////////////////////////////
+        
+        // create the image icon and apply it to JLabel
+        JLabel imageLabel = new JLabel();
+        ImageIcon logoIcon = new ImageIcon("logo.png");
+        imageLabel.setIcon(logoIcon);
+        
+        // create panel and apply JLabel containing logo to panel
+        JPanel logoPanel = new JPanel();
+        logoPanel.add(imageLabel);
         
         // create buttons to create or open an user account
         JButton createBtn = new JButton("Create");
         JButton openBtn = new JButton("Open");
+        
+        JPanel homeButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        homeButtonPanel.add(createBtn);
+        homeButtonPanel.add(openBtn);
           
         // add the listener to the createBtn
         createBtn.addActionListener(new ActionListener() 
@@ -149,6 +150,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             @Override
             public void actionPerformed(ActionEvent ex)
             {
+                // open SubGui window to take user inputs
                 if(child==null)
                 {
                     child = new SubGui(MainGui.this);
@@ -168,155 +170,279 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             {
                 if(openFile())
                 {
-                    account = getFromFile();
-                    
-                    if(account!=null)
+                    try
                     {
-                        cards.show(cardPanel, LOGS);
-
+                        // read the file, get data from it, and set the account using getFromFile method
+                        account = getAccountFromFile();
+                        
+                        // move to LOGS tap
+                        cards.show(centerPanel, LOGS);
+                        menu.setSelectedValue(LOGS, false);
+                        
+                        // show account owner's personal information
                         logName.setText(NAME + " : " + account.getName());
                         logAge.setText(AGE + " : " + account.getAge());
                         logSex.setText(GENDER + " : " + account.getGender());
+
+                        // set logsList and logsListModel to show loaded data
+                        if(!logsListModel.isEmpty())
+                        {
+                            logsListModel.clear();
+                        }
+                        logsList.setModel(logsListModel);
+                        exerciseComboBoxLogs.setSelectedIndex(0);
                     }
-                    
-                    if(!logsListModel.isEmpty())
+                    catch(FileNotFoundException | ParseException | InvalidInputException exx)
                     {
-                        logsListModel.clear();
+                        // show the error message
+                        JOptionPane.showMessageDialog(null, "The File is incorrect format or damaged.", 
+                                "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    logsList.setModel(logsListModel);
-                    
                 }
             }              
         });
         
-        // add buttons to the card1
-        homeCard.add(createBtn);
-        homeCard.add(openBtn);
+        // add panels to the card panel
+        homeCard.add(logoPanel, BorderLayout.CENTER);
+        homeCard.add(homeButtonPanel, BorderLayout.SOUTH);
         
         
-        ///////////////////////////// ENTRY /////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// ENTRY card ///////////////////////////////////////////////////////////
         
-        JPanel entryPanelNorth = new JPanel(new BorderLayout());
-        entryPanelNorth.setBorder(new EmptyBorder(15, 23, 15, 0));
+        JPanel entryPanelNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        entryPanelNorth.add(exerciseComboBoxEntry);
         
-        JPanel entryPanelWest = new JPanel(new BorderLayout());
-        entryPanelWest.setBorder(new EmptyBorder(5, 25, 0, 0));
-        entryPanelWest.setPreferredSize(new Dimension(300, 40));
+        JPanel entryPanelWest = new JPanel(new GridLayout(5, 1));
         
-        JPanel entryPanelSouth = new JPanel(new BorderLayout());
+        JPanel entryPanelCenter = new JPanel(new GridLayout(11, 5));
+        entryPanelCenter.setBorder(new EmptyBorder(0, 50, 0, 0));
         
-        JPanel entryPanelEast = new JPanel(new GridLayout(11, 2));
-        entryPanelEast.setBorder(new EmptyBorder(0, 0, 0, 35));
+        JPanel entryPanelSouth = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
         
-        JPanel entryPanel3 = new JPanel();
-        JPanel entryPanel4 = new JPanel();
-        
-        // action Listener for the combo box, to load entry page
-        exerciseComboBoxEntry.addActionListener(new ActionListener() 
+        // for rm result displays
+        for(int i = 0; i < rmLabels.length-1; i++)
         {
+            rmLabels[i] = new JLabel();
+            entryPanelCenter.add(new JLabel(" " +(5 * i + 50) + "% 1RM:"));
+            entryPanelCenter.add(rmLabels[i]);
+        }
         
+        rmLabels[10] = new JLabel();
+        entryPanelCenter.add(new JLabel("1Rep Max: "));
+        entryPanelCenter.add(rmLabels[10]);
+       
+        // create the rm calculate button
+        JButton calculateButton = new JButton("Calculate");
+        
+        // set the listener for calculateButton
+        calculateButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent ex)
             {
-                System.out.println(exerciseComboBoxEntry.getSelectedItem());
-                
+                try
+                {
+                    validateInput();
+                    int weight = Integer.parseInt(weightField.getText());
+                    int reps = Integer.parseInt(repsField.getText());
+
+                    RM rm = new RM(weight, reps);
+
+                    for (int i = 0; i < rmLabels.length-1; i++)
+                    {
+                        rmLabels[i].setText(String.valueOf(rm.getRMatPercentages(5 * i + 50)));
+                    }
+                    rmLabels[10].setText(rm.toString());    
+                } 
+                catch (InvalidInputException eex)
+                {
+                    JOptionPane.showMessageDialog(null, eex.getMessage(), 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
+                }
+                catch(NumberFormatException eex)
+                {
+                    JOptionPane.showMessageDialog(null, "Weights, Reps, and Calories must be positive Integer.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
+                }
             }
         });
         
+        // set west section using 5 FlowLayouts
+        JPanel entryPanelWest1= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel entryPanelWest2= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel entryPanelWest3= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel entryPanelWest4= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel entryPanelWest5= new JPanel(new FlowLayout(FlowLayout.RIGHT));
         
-        // date / weight / reps / calories grid on left side of page
-        JPanel entryInputGrid = new JPanel(new GridLayout(4, 2, 5, 15));
-        entryInputGrid.setBorder(new EmptyBorder(0, 0, 30, 0));
+        entryPanelWest1.add(new JLabel("Date: "));
+        entryPanelWest1.add(dateField);
+        entryPanelWest2.add(new JLabel("Weight Lifted: "));
+        entryPanelWest2.add(weightField);
+        entryPanelWest3.add(new JLabel("Repetitions: "));
+        entryPanelWest3.add(repsField);
+        entryPanelWest4.add(new JLabel("Calories burned: "));
+        entryPanelWest4.add(caloriesField);
+        entryPanelWest5.add(calculateButton);
         
-        JTextField dateField = new JTextField(20);
-        JTextField liftedField = new JTextField(20);
-        JTextField repsField = new JTextField(20);
-        JTextField caloriesField = new JTextField(20);
+        // set the date field's value to todays date in advance.
+        Date date = new Date();  
+        SimpleDateFormat formatDate = new SimpleDateFormat("MMM-dd-yyyy");
+        dateField.setText(formatDate.format(date));
         
-        entryInputGrid.add(new JLabel("Date: "));
-        entryInputGrid.add(dateField);
+        entryPanelWest.add(entryPanelWest1);
+        entryPanelWest.add(entryPanelWest2);
+        entryPanelWest.add(entryPanelWest3);
+        entryPanelWest.add(entryPanelWest4);
+        entryPanelWest.add(entryPanelWest5);
         
-        entryInputGrid.add(new JLabel("Weight Lifted: "));
-        entryInputGrid.add(liftedField);
+        JButton clearBtn = new JButton("Clear");
         
-        entryInputGrid.add(new JLabel("Repetitions: "));
-        entryInputGrid.add(repsField);
+        clearBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                reset();
+            }
+        });
         
-        entryInputGrid.add(new JLabel("Calories burned: "));
-        entryInputGrid.add(caloriesField);
+        // create a button for adding new log
+        JButton addNewBtn = new JButton("Add New");
         
-        entryPanelWest.add(entryInputGrid, BorderLayout.CENTER);
-        entryPanelWest.add(entryPanel3, BorderLayout.SOUTH);
+        // set the listener for addNewButton
+        addNewBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                // if the user desired to add in bicep, so the comboBox was not touched
+                if(exerciseComboBoxEntry.getSelectedIndex()==-1)
+                {
+                    exerciseComboBoxEntry.setSelectedIndex(0);
+                }             
+                try
+                {
+                    validateInput();
+                    
+                    int weight = Integer.parseInt(weightField.getText());
+                    int reps = Integer.parseInt(repsField.getText()); 
+                    int calories = Integer.parseInt(caloriesField.getText());
+                    
+                    addNewLog(dateField.getText(), weight, reps, calories);
+
+                    JOptionPane.showMessageDialog(null, "New log added Successfully.", 
+                            "Added", JOptionPane.PLAIN_MESSAGE);
+
+                    cards.show(centerPanel, LOGS);
+                    menu.setSelectedValue(LOGS, false);
+                    
+                    exerciseComboBoxLogs.setSelectedIndex(exerciseComboBoxEntry.getSelectedIndex());
+                    
+                }
+                catch(InvalidInputException eex)
+                {
+                    JOptionPane.showMessageDialog(null, eex.getMessage(), 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
+                }
+                catch(NumberFormatException eex)
+                {
+                    JOptionPane.showMessageDialog(null, "Weights, Reps, and Calories must be positive Integer.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
+                }
+            }
+        });
         
-        // RM grid on right side of Entry page
-        JTextField RM50 = new JTextField(6);
-        JTextField RM55 = new JTextField(6);
-        JTextField RM60 = new JTextField(6);
-        JTextField RM65 = new JTextField(6);
-        JTextField RM70 = new JTextField(6);
-        JTextField RM75 = new JTextField(6);
-        JTextField RM80 = new JTextField(6);
-        JTextField RM85 = new JTextField(6);
-        JTextField RM90 = new JTextField(6);
-        JTextField RM95 = new JTextField(6);
-        JTextField RM100 = new JTextField(6);
+        // create a button for editting the selected log.
+        JButton editRecordBtn = new JButton("Edit");
+        // Unless the log to be edit is passed from LOGS, the button is disabled to click.
+        editRecordBtn.setEnabled(false);
         
-        entryPanelEast.add(new JLabel("50% 1RM: "));
-        entryPanelEast.add(RM50);
-        entryPanelEast.add(new JLabel("55% 1RM: "));
-        entryPanelEast.add(RM55);
-        entryPanelEast.add(new JLabel("60% 1RM: "));
-        entryPanelEast.add(RM60);
-        entryPanelEast.add(new JLabel("65% 1RM: "));
-        entryPanelEast.add(RM65);
-        entryPanelEast.add(new JLabel("70% 1RM: "));
-        entryPanelEast.add(RM70);
-        entryPanelEast.add(new JLabel("75% 1RM: "));
-        entryPanelEast.add(RM75);
-        entryPanelEast.add(new JLabel("80% 1RM: "));
-        entryPanelEast.add(RM80);
-        entryPanelEast.add(new JLabel("85% 1RM: "));
-        entryPanelEast.add(RM85);
-        entryPanelEast.add(new JLabel("90% 1RM: "));
-        entryPanelEast.add(RM90);
-        entryPanelEast.add(new JLabel("95% 1RM: "));
-        entryPanelEast.add(RM95);
-        entryPanelEast.add(new JLabel("1RM: "));
-        entryPanelEast.add(RM100);
+        // create a button for canceling editing mode.
+        JButton cancelBtn = new JButton("Cancel");
+        cancelBtn.setEnabled(false);
         
+        // set the listener for editRecordButton
+        editRecordBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                try
+                {
+                    validateInput();
+                    editLog(dateField.getText(), Integer.parseInt(weightField.getText()),
+                            Integer.parseInt(repsField.getText()), Integer.parseInt(caloriesField.getText()));
+
+                    JOptionPane.showMessageDialog(null, "The selected log edited Successfully.", 
+                            "Edit", JOptionPane.PLAIN_MESSAGE);
+
+                    addNewBtn.setEnabled(true);
+                    exerciseComboBoxEntry.setEnabled(true);
+                    editRecordBtn.setEnabled(false);
+                    cancelBtn.setEnabled(false);
+                    cards.show(centerPanel, LOGS);
+                    menu.setSelectedValue(LOGS, false);
+                    editMode = false;
+                }  
+                catch(InvalidInputException eex)
+                {
+                    JOptionPane.showMessageDialog(null, eex.getMessage(), 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
+                }
+                catch(NumberFormatException eex)
+                {
+                    JOptionPane.showMessageDialog(null, "Weights, Reps, and Calories must be positive Integer.", 
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    reset();
+                }
+            }
+        });
         
+        cancelBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent ex)
+            {
+                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure to cancel editing?", 
+                            "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                // only if the user click yes
+                if(reponse == JOptionPane.YES_OPTION)
+                {
+                    editMode = false;
+                    editRecordBtn.setEnabled(false);
+                    addNewBtn.setEnabled(true);
+                    exerciseComboBoxEntry.setEnabled(true);
+                    reset();
+                }
+            }
+        });
         
-        entryPanelNorth.add(exerciseComboBoxEntry, BorderLayout.WEST);
-        
-        JButton calculateButton = new JButton("Calculate");
-        entryPanel3.add(calculateButton);
-        
-        
-        entryPanelWest.add(entryInputGrid, BorderLayout.CENTER);
-        entryPanelWest.add(entryPanel3, BorderLayout.SOUTH);
-        JButton newRecordButton = new JButton("Add New");
-        JButton editRecordButton = new JButton("Edit");
-        entryPanel4.add(newRecordButton);
-        entryPanel4.add(editRecordButton);
-        entryPanelSouth.add(entryPanel4);
+        entryPanelSouth.add(clearBtn);
+        entryPanelSouth.add(addNewBtn);
+        entryPanelSouth.add(editRecordBtn);
+        entryPanelSouth.add(cancelBtn);
         
         entryCard.add(entryPanelNorth, BorderLayout.NORTH);
         entryCard.add(entryPanelWest, BorderLayout.WEST);
-        entryCard.add(entryPanelEast, BorderLayout.EAST);
+        entryCard.add(entryPanelCenter, BorderLayout.CENTER);
         entryCard.add(entryPanelSouth, BorderLayout.SOUTH);
         
-        
-        
-        ///////////////////////////// LOGS ////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// LOGS card ////////////////////////////////////////////////////////////////////
         
         // Panels that will go in each section of logsCard page borderlayout
-        JPanel logsPanelNorth = new JPanel(new GridLayout(2, 4, 5, 30));
-        JPanel logsPanelCenter = new JPanel(new BorderLayout());
-        JPanel logsPanelSouth = new JPanel(new GridLayout(1, 3, 5, 0));
+        JPanel logsPanelNorth = new JPanel(new GridLayout(2, 4, 5, 5));
+        JPanel logsPanelCenter = new JPanel();
+        JPanel logsPanelSouth = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         
-        logsPanelNorth.setBorder(new EmptyBorder(10,10,0,20));
-        logsPanelCenter.setBorder(new EmptyBorder(0,10,0,20));
-        logsPanelSouth.setBorder(new EmptyBorder(20,10,20,20));
+        logsPanelNorth.setBorder(new EmptyBorder(10,10,0,10));
+        logsPanelCenter.setBorder(new EmptyBorder(0,10,0,10));
+        logsPanelSouth.setBorder(new EmptyBorder(10,10,20,10));
 
         logName = new JLabel(NAME + " :");
         logAge = new JLabel (AGE + " :");
@@ -327,17 +453,23 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         logsPanelNorth.add(logAge);
         logsPanelNorth.add(logSex);
         logsPanelNorth.add(exerciseComboBoxLogs);
-        logsPanelNorth.add(new JLabel("Date", JLabel.RIGHT));
-        logsPanelNorth.add(new JLabel("1RM", JLabel.RIGHT));
+        logsPanelNorth.add(new JLabel(" Date", JLabel.RIGHT));
+        logsPanelNorth.add(new JLabel(" 1RM", JLabel.RIGHT));
         logsPanelNorth.add(new JLabel("Calories", JLabel.RIGHT));
+        
+        
+        logsList = new JList(logsListModel);
+        JScrollPane logsScrollPane = new JScrollPane(logsList);
+        logsScrollPane.setPreferredSize(new Dimension(400, 180));
+        
+        // component added on center of logs page
+        logsPanelCenter.add(logsScrollPane);
         
         exerciseComboBoxLogs.addActionListener(new ActionListener() 
         {
             @Override
             public void actionPerformed(ActionEvent ex)
-            {
-                System.out.println(exerciseComboBoxLogs.getSelectedItem());
-                
+            {   
                 int index = exerciseComboBoxLogs.getSelectedIndex();
                 
                 if(!logsListModel.isEmpty())
@@ -345,32 +477,17 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
                     logsListModel.clear();
                 }
 
-                // put the elements of socialList into the listModel
+                // put the elements of selected exercise into the listModel
                 for (Log log : account.getExerciseList().get(index))
                 {
                     logsListModel.addElement(log);
                 }
 
                 // set listModel to show it on the JList
-                logsList.setModel(logsListModel);
-                
+                logsList.setModel(logsListModel);              
             }
         });
         
-        logsList = new JList(logsListModel);
-        
-        logsList.setCellRenderer(new DefaultListCellRenderer()
-        {
-            public int getHorizontalAlignment() 
-            {
-                return CENTER;
-            }
-        });
-        JScrollPane logsScrollPane = new JScrollPane(logsList);
-        //logsScrollPane.setPreferredSize(new Dimension(100, 50));
-        
-        // components added on bottom of logs page
-        logsPanelCenter.add(logsScrollPane);
         
         JButton saveBtn = new JButton("Save");
         JButton editBtn = new JButton("Details/Edit");
@@ -383,7 +500,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             {
                 if(saveFile())
                 {
-                    JOptionPane.showMessageDialog(null, "Change saved successfully!", "Notify", 
+                    JOptionPane.showMessageDialog(null, "Changes saved successfully!", "Notify", 
                                                 JOptionPane.PLAIN_MESSAGE);
                 }
                 else
@@ -399,7 +516,31 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             @Override
             public void actionPerformed(ActionEvent ex)
             {
+                int exerciseIndex = exerciseComboBoxLogs.getSelectedIndex();
+                int logIndex = logsList.getSelectedIndex();
                 
+                if (logIndex > -1)
+                {
+                    editMode = true;
+                    // get the log specified by the exercise combo index + the list selection index
+                    Log selectedLog = account.getExerciseList().get(exerciseIndex).get(logIndex);
+                    // input entries from the log into fields on the entry page
+                    dateField.setText(selectedLog.getDate());
+                    weightField.setText(String.valueOf(selectedLog.getWeight()));
+                    repsField.setText(String.valueOf(selectedLog.getReps()));
+                    caloriesField.setText(String.valueOf(selectedLog.getCalories()));
+                    
+                    // change the combo box on the entry page to match the combo selection from logs page
+                    exerciseComboBoxEntry.setSelectedIndex(exerciseIndex);
+                    // switch to the entry page
+                    cards.show(centerPanel, ENTRY);
+                    menu.setSelectedValue(ENTRY, false);
+                    // set the buttons in the entry page 
+                    editRecordBtn.setEnabled(true);
+                    cancelBtn.setEnabled(true);
+                    addNewBtn.setEnabled(false);
+                    exerciseComboBoxEntry.setEnabled(false);
+                }
             }
         });
         
@@ -408,30 +549,30 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             @Override
             public void actionPerformed(ActionEvent ex)
             {
-                int reponse = JOptionPane.showConfirmDialog(null, "Are you sure, jackass?", 
-                        "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-                // only if the user click yes
-                if(reponse == JOptionPane.YES_OPTION)
+                int index = logsList.getSelectedIndex();
+                if(index!=-1)
                 {
-                    int index = logsList.getSelectedIndex();
-                    deleteLog(index);
+                    int reponse = JOptionPane.showConfirmDialog(null, "Are you sure to delete it, jackass?", 
+                            "confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                    // only if the user click yes
+                    if(reponse == JOptionPane.YES_OPTION)
+                    {
+                        deleteLog(index);
+                    }
                 }
-                
             }
         });
         
+        // components added on top of logs page
         logsPanelSouth.add(saveBtn);
         logsPanelSouth.add(editBtn);
         logsPanelSouth.add(deleteBtn);
 
-        
         // logs page subsections added to main logs panel
         logsCard.add(logsPanelNorth, BorderLayout.NORTH);
         logsCard.add(logsPanelCenter, BorderLayout.CENTER);
         logsCard.add(logsPanelSouth, BorderLayout.SOUTH);
-        
-        
         
         
         ///////////////////////////// GRAPHS ///////////////////////////////////////////////////////////////
@@ -443,38 +584,36 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         
         
         
-        
-        
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        // add components to the menuPanel (left side)
-        menuPanel.add(menu);
-        menuPanel.add(menuSeparator);
-        menuPanel.setBorder(new EmptyBorder(-5, 0, -5, 0));
+        
+        JPanel menuPanel = new JPanel(new BorderLayout());
+        
+        // add components to the menuPanel
+        menuPanel.add(menu, BorderLayout.WEST);
+        menuPanel.add(menuSeparator, BorderLayout.CENTER);
         
         // add the menupanel to the west area
         add(menuPanel, BorderLayout.WEST);
         
         // add each card to the cardPanel
-        cardPanel.add(homeCard, HOME);
-        cardPanel.add(entryCard, ENTRY);
-        cardPanel.add(logsCard, LOGS);
-        cardPanel.add(graphsCard, GRAPHS);
+        centerPanel.add(homeCard, HOME);
+        centerPanel.add(entryCard, ENTRY);
+        centerPanel.add(logsCard, LOGS);
+        centerPanel.add(graphsCard, GRAPHS);
         
         // show HOME card when the app start 
-        cards.show(cardPanel, HOME);
+        cards.show(centerPanel, HOME);
         
         // add the cardpanel to the center area
-        add(cardPanel, BorderLayout.CENTER);
-
+        add(centerPanel, BorderLayout.CENTER);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////METHODS////////////////////////////////////////////////
     
     private boolean openFile()
-    {
-        
+    {     
         // create JFileChooser to open a file from the current directory
         JFileChooser openChooser = new JFileChooser();
         
@@ -500,87 +639,138 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         }
     }
     
-    private UserAccount getFromFile()
+    private UserAccount getAccountFromFile() throws FileNotFoundException, ParseException, InvalidInputException
     {    
-        UserAccount acc = null;
-        try(Scanner reader = new Scanner(file);) 
+        UserAccount acc;
+        
+        Scanner reader = new Scanner(file);
+
+        StringBuilder jsonBuilder = new StringBuilder(); 
+
+        // read a file using scanner and store the data to jsonBuilder
+        while (reader.hasNextLine()) 
         {
-            StringBuilder jsonBuilder = new StringBuilder(); 
-            
-            // read a file using scanner and store the data to jsonBuilder
-            while (reader.hasNextLine()) 
+            jsonBuilder.append(reader.nextLine());
+        }
+
+        String jsonString = jsonBuilder.toString();
+
+        JSONParser parser = new JSONParser();
+
+        // JsonObject representing one instance of UserAccount 
+        accountJson = (JSONObject) parser.parse(jsonString);
+
+        String name = (String) accountJson.get(NAME);
+        int age = (int)((long) accountJson.get(AGE));
+        char gender = ((String)accountJson.get(GENDER)).charAt(0);
+
+        // create an account using data from JSONObject
+        acc = new UserAccount(name, age, gender);
+
+        // exerciseListJson contains an array of different kinds of exercise
+        exerciseListJson = (JSONObject) accountJson.get("ExerciseList");
+
+        // get each exercise insise exerciseListJson
+        for (int i = 0; i < EXERCISE_LIST.length; i++)
+        {
+            JSONArray jsonarray = (JSONArray)exerciseListJson.get(EXERCISE_LIST[i]);
+
+            if(!jsonarray.isEmpty())
             {
-                jsonBuilder.append(reader.nextLine());
-            }
-            
-            String jsonString = jsonBuilder.toString();
-            
-            JSONParser parser = new JSONParser();
-            
-            // root JsonObject represents one instance of UserAccount 
-            accountJson = (JSONObject) parser.parse(jsonString);
-            
-            
-            String name = (String) accountJson.get(NAME);
-            int age = (int)((long) accountJson.get(AGE));
-            char gender = ((String)accountJson.get(GENDER)).charAt(0);
-            
-            acc = new UserAccount(name, age, gender);
-            
-            // exerciseListJson contains an array of different kinds of exercise
-            exerciseListJson = (JSONObject) accountJson.get("ExerciseList");
-            
-            for (int i = 0; i < EXERCISE_LIST.length; i++)
-            {
-                JSONArray jsonarray = (JSONArray)exerciseListJson.get(EXERCISE_LIST[i]);
-                
-                if(!jsonarray.isEmpty())
+                // get each log inside the exercise indicated by the index i
+                for (int j = 0; j < jsonarray.size(); j++)
                 {
-                    for (int j = 0; j < jsonarray.size(); j++)
-                    {
-                            JSONObject obj = (JSONObject)jsonarray.get(j);
+                    JSONObject obj = (JSONObject)jsonarray.get(j);
 
-                            String date = (String) obj.get("date");
-                            int weight = (int)((long) obj.get("weight"));
-                            int reps = (int)((long) obj.get("reps"));
-                            int calories = (int)((long) obj.get("calories"));
+                    String date = (String) obj.get("date");
+                    int weight = (int)((long) obj.get("weight"));
+                    int reps = (int)((long) obj.get("reps"));
+                    int calories = (int)((long) obj.get("calories"));
 
-                            Log log = new Log(date, weight, reps, calories);
+                    // create a log using data from JSONObject
+                    Log log = new Log(date, weight, reps, calories);
 
-                            acc.getExerciseList().get(i).add(log);
-                    }
+                    // add the created log to the exercise indicated by the index i
+                    acc.getExerciseList().get(i).add(log);
                 }
             }
-            
-                        
-        }
-        catch(FileNotFoundException ex) 
-        {
-            System.out.println("Not existing file.");
-        }
-        catch(ParseException ex)
-        {
-            System.out.println("The file cannot be opend.");
-        }
+        }                       
         return acc;
     }
     
     private boolean deleteLog(int index)
     {
+        if(index==-1)
+        {
+            return false;
+        }
+        // get the index of currently selected exericse
         int chosenExercise = exerciseComboBoxLogs.getSelectedIndex();
+        
+        // remove the given index's log
         account.getExerciseList().get(chosenExercise).remove(index);
         JSONArray jsonarray = (JSONArray) exerciseListJson.get(EXERCISE_LIST[chosenExercise]);
         jsonarray.remove(index);
+        
+        // update JSON
         exerciseListJson.replace(EXERCISE_LIST[chosenExercise], jsonarray);
         accountJson.replace("ExerciseList", exerciseListJson);
 
-        // remove the clicked item from the list
+        // remove the given index's log from the list
         logsListModel.removeElement(logsList.getSelectedValue());
-        return true;    
+        return true;
     }
+    
+    private void addNewLog(String date, int weight, int reps, int calories) throws NumberFormatException, InvalidInputException
+    {
+        Log log = new Log(date, weight, reps, calories);
+        
+        int chosenExercise = exerciseComboBoxEntry.getSelectedIndex();
+        account.getExerciseList().get(chosenExercise).add(log);
+        
+        // create new JSONObject to add into exerciseList
+        JSONObject obj = new JSONObject();     
+        obj.put("date", date);
+        obj.put("weight", weight);
+        obj.put("reps", reps);
+        obj.put("calories", calories);
+        
+        JSONArray jsonarray = (JSONArray) exerciseListJson.get(EXERCISE_LIST[chosenExercise]);
+        jsonarray.add(obj);
+        
+        // update JSON
+        exerciseListJson.replace(EXERCISE_LIST[chosenExercise], jsonarray);
+        accountJson.replace("ExerciseList", exerciseListJson);  
+    }
+
+    private void editLog(String date, int weight, int reps, int calories) throws NumberFormatException, InvalidInputException
+    {
+        int chosenExercise = exerciseComboBoxEntry.getSelectedIndex();
+        int logIndex = logsList.getSelectedIndex();
+        
+        Log log = new Log(date, weight, reps, calories);
+        account.getExerciseList().get(chosenExercise).set(logIndex, log);
+        
+        JSONObject obj = new JSONObject();
+        obj.put("date", date);
+        obj.put("weight", weight);
+        obj.put("reps", reps);
+        obj.put("calories", calories);
+        
+        JSONArray jsonarray = (JSONArray) exerciseListJson.get(EXERCISE_LIST[chosenExercise]);
+        jsonarray.remove(logIndex);
+        jsonarray.add(logIndex, obj);
+        exerciseListJson.replace(EXERCISE_LIST[chosenExercise], jsonarray);
+        accountJson.replace("ExerciseList", exerciseListJson);
+
+        logsListModel.remove(logIndex);
+        logsListModel.addElement(log);
+    }
+    
     
     private boolean saveFile()
     {
+        // if the user try to save before open a file or create an account
         if(file==null || account==null)
         {
             return false;
@@ -590,30 +780,34 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         {
             writer.printf(accountJson.toJSONString());
         } 
-        catch (FileNotFoundException ex)
+        catch (FileNotFoundException ignoreMe)
         {
-            System.out.println(ex);
+            return false;
         }
         return true;
     }
     
+    
     @Override
     public void onChildUpdate(String name, int age, String gender)
     {
+        // set the new file's name
         String fileName = name.replace(" ", "_");        
         file = new File(fileName+".json");
         
+        // if the same named file already exists
         if(file.exists())
         {
-            JOptionPane.showMessageDialog(null, "Same Name is already existing", "Notify", 
-                    JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Same Name is already existing", "Error", 
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
         
+        // set new account
         account = new UserAccount(name, age, gender.charAt(0));
         
-        accountJson = new JSONObject();
-            
+        // set Json to write to the file 
+        accountJson = new JSONObject();     
         accountJson.put(NAME, account.getName());
         accountJson.put(AGE, account.getAge());
         accountJson.put(GENDER, String.valueOf(account.getGender()));
@@ -624,48 +818,82 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         {
             exerciseListJson.put(EXERCISE_LIST[i], new JSONArray());
         }
-        
         accountJson.put("ExerciseList", exerciseListJson);
         
+        // if saving data to a file succeed, 
         if(saveFile())
         {
             JOptionPane.showMessageDialog(null, "Your account created successfully!", "Notify", 
                     JOptionPane.PLAIN_MESSAGE);
             child=null;
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(null, "[Error]What can i say..... umm...", "Notify", 
-                    JOptionPane.PLAIN_MESSAGE);
-        }
-
-        if(account!=null)
-        {
-            cards.show(cardPanel, LOGS);
-
+            
+            // show account owner's personal information
             logName.setText(NAME + " : " + account.getName());
             logAge.setText(AGE + " : " + account.getAge());
             logSex.setText(GENDER + " : " + account.getGender());
-        }
 
-        if(!logsListModel.isEmpty())
+            // set logsList and logsListModel to show loaded data
+            if(!logsListModel.isEmpty())
+            {
+                logsListModel.clear();
+            }
+            logsList.setModel(logsListModel);
+        }
+        else
         {
-            logsListModel.clear();
+            JOptionPane.showMessageDialog(null, "Error occured in the process of creating an account", "Error", 
+                    JOptionPane.ERROR_MESSAGE);
         }
-        logsList.setModel(logsListModel);
     }
-
     
     
     @Override
-    public boolean validateInput()
+    public void validateInput() throws InvalidInputException, NumberFormatException
     {
-        return true;
+        if(dateField.getText().equals("") || !dateField.getText().matches("^[A-z]{3}-[0-9]{2}-[0-9]{4}$"))
+        {
+            throw new InvalidInputException("Date must filled following the format. ex) Apr-22-2015 ");
+        }
+
+        if(weightField.getText().equals("") || repsField.getText().equals("") || caloriesField.getText().equals(""))
+        {
+            throw new InvalidInputException("All fields must be filled.");
+        }
+        else
+        {
+            int weight = Integer.parseInt(weightField.getText()); 
+            int reps = Integer.parseInt(repsField.getText());
+            int calories = Integer.parseInt(caloriesField.getText());
+
+            if(weight < 0 || reps < 0 || calories < 0)
+            {
+                throw new InvalidInputException("Weight lifted, Reps, and Calories must be positive Integer.");
+            }
+        }
     }
 
     @Override
     public void reset()
     {
-    }
-    
+        if(editMode)
+        {
+            int exerciseIndex = exerciseComboBoxEntry.getSelectedIndex();
+            int logIndex = logsList.getSelectedIndex();
+            dateField.setText(account.getExerciseList().get(exerciseIndex).get(logIndex).getDate());
+            weightField.setText(String.valueOf(account.getExerciseList().get(exerciseIndex).get(logIndex).getWeight())); 
+            repsField.setText(String.valueOf(account.getExerciseList().get(exerciseIndex).get(logIndex).getReps()));;
+            caloriesField.setText(String.valueOf(account.getExerciseList().get(exerciseIndex).get(logIndex).getCalories()));
+        }
+        else
+        {
+            dateField.setText("");
+            weightField.setText(""); 
+            repsField.setText("");
+            caloriesField.setText("");
+            for(int i = 0; i < rmLabels.length; i++)
+            {
+                rmLabels[i].setText("");
+            }
+        }
+    } 
 }

@@ -21,6 +21,7 @@ public final class RM
     public RM(int weight, int reps)
     {
         oneRepMax = calculateRM(weight, reps);
+        
     }
     
     /////////////////////////// METHODS //////////////////////////
@@ -28,9 +29,10 @@ public final class RM
     public static int calculateRM(int weight, int reps)
     {
         return (int)Math.round(weight / (1 + FOMULA - (FOMULA * reps)));
+        
     }
     
-    public int getRMatPercentages(int percentages)
+    public int getRMatPercentages(double percentages)
     {
         return (int)Math.round(oneRepMax * (percentages/100));
     }
