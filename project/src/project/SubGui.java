@@ -17,13 +17,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-/////////////////////////////////////////////////////
-//
-// AUTHOR : Alex Park & Chris Sarvghadi
-// CREATE : 7-Apr-2015
-// UPDATE : 22-Apr-2015
-//
-/////////////////////////////////////////////////////
+
+/**
+   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+   *
+   *   Honor: I have completed this assignment on my own.
+   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+   *
+   *   File name: SubGui.java 
+   *   
+   *   Description: This is the sub GUI class of this application. 
+   *                        This class contains interface to transfer user input data to mainGui.
+   *
+   *   @author Alex Yeji Park && Chris Sarvghadi 
+   */
 
 public class SubGui extends JFrame implements ValidateInput
 {

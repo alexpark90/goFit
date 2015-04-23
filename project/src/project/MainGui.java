@@ -22,13 +22,20 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 
-/////////////////////////////////////////////////////
-//                                                 
-// AUTHOR : Alex Park & Chris Sarvghadi            
-// CREATE : 7-Apr-2015                            
-// UPDATE : 22-Apr-2015                                       
-//                                                 
-/////////////////////////////////////////////////////
+/**
+   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+   *
+   *   Honor: I have completed this assignment on my own.
+   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+   *
+   *   File name: MainGui.java 
+   *   
+   *   Description: This is the main GUI class of this application. 
+   *                        There are several methods to handle events and manipulate data. 
+   *                        This class contains subGui, which is used for creating new user account.
+   *
+   *   @author Alex Yeji Park && Chris Sarvghadi 
+   */
 
 public class MainGui extends JFrame implements SubGui.TransferData, ValidateInput
 {
@@ -578,9 +585,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         ///////////////////////////// GRAPHS ///////////////////////////////////////////////////////////////
         
         
-        
-        // code for the layout for the graphs section 
-        
+        graphsCard.add(new JLabel("This section will be updated..."));
         
         
         

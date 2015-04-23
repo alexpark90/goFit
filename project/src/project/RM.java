@@ -1,13 +1,19 @@
 
 package project;
 
-/////////////////////////////////////////////////////
-//
-// AUTHOR : Alex Park & Chris Sarvghadi
-// CREATE : 7-Apr-2015
-// UPDATE : 14-Apr-2015
-//
-/////////////////////////////////////////////////////
+
+/**
+   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+   *
+   *   Honor: I have completed this assignment on my own.
+   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+   *
+   *   File name: RM.java 
+   *   
+   *   Description: This class is for calculating one rep maximum weight a person can lift. 
+   *
+   *   @author Alex Yeji Park && Chris Sarvghadi 
+   */
 
 public final class RM 
 {
