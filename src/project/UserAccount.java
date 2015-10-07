@@ -5,18 +5,19 @@ import java.util.ArrayList;
 
 
 /**
-   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
-   *
-   *   Honor: I have completed this assignment on my own.
-   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
-   *
-   *   File name: UserAccount.java 
-   *   
-   *   Description: This class holds user information such as name, age, gender.
-   *                        ArrayList, exerciseList contains 7 different exercises. Each exercise is an array of logs.
-   *
-   *   @author Alex Yeji Park && Chris Sarvghadi 
-   */
+ *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+ *
+ *   Honor: I have completed this assignment on my own.
+ *         In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+ *
+ *   File name: UserAccount.java 
+ *   
+ *   Description: This class holds user information such as name, age, gender.
+ *                ArrayList called exerciseList contains 7 different exercises. 
+ *                Each exercise is an array of logs.
+ *
+ *   @author Alex Yeji Park && Chris Sarvghadi 
+ */
 
 public class UserAccount 
 {
@@ -85,7 +86,6 @@ public class UserAccount
     {
         this.exerciseList = exerciseList;
     }
-    
     
     
     @Override

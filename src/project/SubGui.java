@@ -19,18 +19,18 @@ import javax.swing.border.EmptyBorder;
 
 
 /**
-   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
-   *
-   *   Honor: I have completed this assignment on my own.
-   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
-   *
-   *   File name: SubGui.java 
-   *   
-   *   Description: This is the sub GUI class of this application. 
-   *                        This class contains interface to transfer user input data to mainGui.
-   *
-   *   @author Alex Yeji Park && Chris Sarvghadi 
-   */
+ *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+ *
+ *   Honor: I have completed this assignment on my own.
+ *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+ *
+ *   File name: SubGui.java 
+ *   
+ *   Description: This is the sub GUI class of this application. 
+ *                It contains interface to transfer user input data to mainGui.
+ *
+ *   @author Alex Yeji Park && Chris Sarvghadi 
+ */
 
 public class SubGui extends JFrame implements ValidateInput
 {
@@ -107,7 +107,8 @@ public class SubGui extends JFrame implements ValidateInput
                 try
                 {    
                     validateInput();
-                    SubGui.this.parent.onChildUpdate(nameField.getText(), Integer.parseInt(ageField.getText()), 
+                    SubGui.this.parent.onChildUpdate(nameField.getText(), 
+                            Integer.parseInt(ageField.getText()), 
                             (String)genderBox.getSelectedItem());
                     SubGui.this.dispose();
                 }
@@ -144,7 +145,7 @@ public class SubGui extends JFrame implements ValidateInput
         add(bottomPanel);
     }
     
-    
+    // override validateInput method of ValidateInput class
     @Override
     public void validateInput() throws InvalidInputException
     {
@@ -175,6 +176,7 @@ public class SubGui extends JFrame implements ValidateInput
         }
     }
 
+    // override reset method of ValidateInput class
     @Override
     public void reset()
     {

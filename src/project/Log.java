@@ -2,18 +2,19 @@ package project;
 
 
 /**
-   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
-   *
-   *   Honor: I have completed this assignment on my own.
-   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
-   *
-   *   File name: Log.java 
-   *   
-   *   Description: This class has the information of each day's work out such as date, weight, reps, calories.
-   *                        Using this class method getRM, users can check their one-rep-maximum-weight they can lift. 
-   *
-   *   @author Alex Yeji Park && Chris Sarvghadi 
-   */
+ *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+ *
+ *   Honor: I have completed this assignment on my own.
+ *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+ *
+ *   File name: Log.java 
+ *   
+ *   Description: This class has the information of each day's work out 
+ *                such as date, weight, reps, calories. Using this class method getRM, 
+ *                users can check their one-rep-maximum-weight they can lift. 
+ *
+ *   @author Alex Yeji Park && Chris Sarvghadi 
+ */
 
 public class Log
 {

@@ -3,17 +3,17 @@ package project;
 
 
 /**
-   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
-   *
-   *   Honor: I have completed this assignment on my own.
-   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
-   *
-   *   File name: RM.java 
-   *   
-   *   Description: This class is for calculating one rep maximum weight a person can lift. 
-   *
-   *   @author Alex Yeji Park && Chris Sarvghadi 
-   */
+ *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+ *
+ *   Honor: I have completed this assignment on my own.
+ *         In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+ *
+ *   File name: RM.java 
+ *   
+ *   Description: This class is for calculating one rep maximum weight a person can lift. 
+ *
+ *   @author Alex Yeji Park && Chris Sarvghadi 
+ */
 
 public final class RM 
 {
@@ -26,8 +26,7 @@ public final class RM
 
     public RM(int weight, int reps)
     {
-        oneRepMax = calculateRM(weight, reps);
-        
+        oneRepMax = calculateRM(weight, reps);     
     }
     
     /////////////////////////// METHODS //////////////////////////
@@ -48,6 +47,4 @@ public final class RM
     {
         return String.valueOf(oneRepMax);
     }
-    
-     
 }

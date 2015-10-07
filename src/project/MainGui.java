@@ -23,49 +23,56 @@ import org.json.simple.parser.ParseException;
 
 
 /**
-   *   Submitted by: Alex Yeji Park && Chris Sarvghadi
-   *
-   *   Honor: I have completed this assignment on my own.
-   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
-   *
-   *   File name: MainGui.java 
-   *   
-   *   Description: This is the main GUI class of this application. 
-   *                        There are several methods to handle events and manipulate data. 
-   *                        This class contains subGui, which is used for creating new user account.
-   *
-   *   @author Alex Yeji Park && Chris Sarvghadi 
-   */
+ *   Submitted by: Alex Yeji Park && Chris Sarvghadi
+ *
+ *   Honor: I have completed this assignment on my own.
+ *          In researching the assignment I got help/ideas from http://stackoverflow.com/ 
+ *
+ *   File name: MainGui.java 
+ *   
+ *   Description: This is the main GUI class of this application. 
+ *                There are several methods to handle events and manipulate data. 
+ *                This class contains subGui, which is used for creating new user account.
+ *
+ *   @author Alex Yeji Park && Chris Sarvghadi 
+ */
 
 public class MainGui extends JFrame implements SubGui.TransferData, ValidateInput
 {
     ///////////////////////////////// FIELDS //////////////////////////////////
     
+    // constants for card layout.
     final static String HOME = "HOME";
     final static String ENTRY = "ENTRY";
     final static String LOGS = "LOGS";
     final static String GRAPHS = "GRAPHS";
     final static String[] MENU_LIST = {HOME, ENTRY, LOGS, GRAPHS};
     
+    // constants to label on GUI
     final static String NAME = "Name";
     final static String AGE = "Age";
     final static String GENDER = "Gender";
     final static String[] EXERCISE_LIST = {"Bicep", "Tricep", "DeadLift", "BackExtension", "Squat", "LegPress", "BenchPress",};
-        
+    
+    // variables to hold the user information
+    // and handle the JOSN file.
     private UserAccount account;
     private JSONObject accountJson;
     private JSONObject exerciseListJson;
     
+    // to hold the SubGui 
     SubGui child;
         
+    // variables for card layouts
     CardLayout cards = new CardLayout();
     JPanel centerPanel;
-    
     JPanel homeCard = new JPanel(new BorderLayout());
     JPanel entryCard = new JPanel(new BorderLayout());
     JPanel logsCard = new JPanel(new BorderLayout());
     JPanel graphsCard = new JPanel();
     
+    
+    // variables to be used in entry section
     JTextField dateField = new JTextField(10);
     JTextField weightField = new JTextField(10);
     JTextField repsField = new JTextField(10);
@@ -73,6 +80,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     
     JLabel[] rmLabels = new JLabel[11];
     
+    // variables to be used in logs section
     JLabel logName;
     JLabel logAge;
     JLabel logSex;
@@ -83,18 +91,20 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
     JComboBox exerciseComboBoxEntry = new JComboBox(EXERCISE_LIST);
     JComboBox exerciseComboBoxLogs = new JComboBox(EXERCISE_LIST);
     
+    // to handle I/O
     File file;
     File directory;
+    
+    // to control the editting mode in entry section
     boolean editMode = false;
     
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////// CONSTRUCTOR ///////////////////////////////////////////////////
     
     public MainGui()
     {
-
-        //////////////////////////////////////// WEST //////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// WEST /////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////
 
         // create menu JList and put MENU_LIST to menu to show the elements in it       
         JList menu = new JList();
@@ -125,14 +135,14 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         JSeparator menuSeparator = new JSeparator(SwingConstants.VERTICAL);
         menuSeparator.setPreferredSize(new Dimension(5, 310));
     
-        //////////////////////////////////////// CENTER ///////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// CENTER /////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////
         
         // set the cardPanel's layout to the cardLayout
         centerPanel = new JPanel(cards);
         
         
-        ////////////////////////////////////// HOME card ///////////////////////////////////////////////////////
+        //////////////////////////////// HOME card //////////////////////////////
         
         // create the image icon and apply it to JLabel
         JLabel imageLabel = new JLabel();
@@ -179,7 +189,8 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
                 {
                     try
                     {
-                        // read the file, get data from it, and set the account using getFromFile method
+                        // read the file, get data from it,
+                        //and set the account using getFromFile method
                         account = getAccountFromFile();
                         
                         // move to LOGS tap
@@ -214,7 +225,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         homeCard.add(homeButtonPanel, BorderLayout.SOUTH);
         
         
-        ///////////////////////////////////// ENTRY card ///////////////////////////////////////////////////////////
+        ////////////////////////////// ENTRY card /////////////////////////////////
         
         JPanel entryPanelNorth = new JPanel(new FlowLayout(FlowLayout.LEFT));
         entryPanelNorth.add(exerciseComboBoxEntry);
@@ -440,7 +451,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         entryCard.add(entryPanelCenter, BorderLayout.CENTER);
         entryCard.add(entryPanelSouth, BorderLayout.SOUTH);
         
-        ///////////////////////////////// LOGS card ////////////////////////////////////////////////////////////////////
+        ///////////////////////////// LOGS card /////////////////////////////////////
         
         // Panels that will go in each section of logsCard page borderlayout
         JPanel logsPanelNorth = new JPanel(new GridLayout(2, 4, 5, 5));
@@ -494,8 +505,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
                 logsList.setModel(logsListModel);              
             }
         });
-        
-        
+             
         JButton saveBtn = new JButton("Save");
         JButton editBtn = new JButton("Details/Edit");
         JButton deleteBtn = new JButton("Delete");
@@ -582,14 +592,14 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         logsCard.add(logsPanelSouth, BorderLayout.SOUTH);
         
         
-        ///////////////////////////// GRAPHS ///////////////////////////////////////////////////////////////
+        ///////////////////////////// GRAPHS /////////////////////////////////////
         
         
         graphsCard.add(new JLabel("This section will be updated..."));
         
         
         
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
         
         
         JPanel menuPanel = new JPanel(new BorderLayout());
@@ -614,8 +624,8 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         add(centerPanel, BorderLayout.CENTER);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////METHODS////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////HELPER METHODS/////////////////////////////////
     
     private boolean openFile()
     {     
