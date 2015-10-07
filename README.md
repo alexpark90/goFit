@@ -2,6 +2,12 @@
 
 This was my Java class' final project with a friend of mine, Chris.
 
+My main part was designing whole structure of the program, UML, json file handling, Exception handling, creating the bagic logic, and helper methods.
+
+I created custom exception in ValidateInput interface and mainGui and subGui are implementing it.
+So, everytime user submit their inputs, mainGui or subGui's overriden methods of ValidateInput class is called,
+and throws custom exception depends on the inputs.
+
 This program is designed to track the progress of a user’s strength training fitness regimen.
 Users can choose to use this information to modify their training regimen, 
 or they may simply use the application to keep track of the work that they have done.
@@ -10,13 +16,26 @@ A graphing function which will take the user’s inputs and visually display the
 I am planning to do it in the near futrue. 
 
 Left-hand(West) navigation pane allows switching between various tabs(CardLayout)
+
+
+(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit1.jpg)
+
 	
 Welcome/Main Page:
 -	Create button: pops up a new SubGui window to create a new user account.
 -	Open button: pops up a JFileChooser window to allow loading of an existing account.
 
+
+(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit2.jpg)
+
+
 Create Account Page (SubGui):
 -	Name/Age/Gender JTextfields: allow user to input information about themselves for creation of a new account. 
+
+
+(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit8.jpg)
+(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit9.jpg)
+
 
 Entry Page:
 -	Exercise JComboBox: allows the user to choose an exercise (ArrayList) to load into the application.
@@ -25,11 +44,14 @@ Entry Page:
                     and how much they can likely lift at various percentages of that maximum.
 -	Add/Edit JButtons: allow the user to add their inputs into their log, or to edit/delete previous entries.
 
+
+(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit4.jpg)
+(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit5.jpg)
+
+
 Log Page: 
 -	Exercise JComboBox: allows user to specify an exercise, of which logs will be displayed in a columned JList format. 
 -	Details/Edit JButton: will switch back to the Entry page and load the selected log entry. 
 -	Save JButton: will save the new entries and/or edits to the user’s account file.
-- Delete JButton: will delete the selected log.
+- 	Delete JButton: will delete the selected log.
 
-
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/alexpark90.github.io/master/images/screenshot.jpg)
