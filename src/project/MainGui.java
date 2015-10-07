@@ -148,7 +148,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         
         // create the image icon and apply it to JLabel
         JLabel imageLabel = new JLabel();
-        ImageIcon logoIcon = new ImageIcon("logo.png");
+        ImageIcon logoIcon = new ImageIcon("image/logo.png");
         imageLabel.setIcon(logoIcon);
         
         // create panel and apply JLabel containing logo to panel
