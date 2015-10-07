@@ -27,7 +27,7 @@ import javax.swing.border.EmptyBorder;
  *   File name: SubGui.java 
  *   
  *   Description: This is the sub GUI class of this application. 
- *                It contains interface to transfer user input data to mainGui.
+ *              It contains interface to transfer user input data to mainGui.
  *
  *   @author Alex Yeji Park && Chris Sarvghadi 
  */
@@ -105,15 +105,19 @@ public class SubGui extends JFrame implements ValidateInput
             public void actionPerformed(ActionEvent e) 
             {
                 try
-                {    
+                {
+                    // before pass the data, validate inputs first.
+                    // if there is not valid input, it will throws InvalidInputException.
                     validateInput();
                     SubGui.this.parent.onChildUpdate(nameField.getText(), 
                             Integer.parseInt(ageField.getText()), 
                             (String)genderBox.getSelectedItem());
+                    // after passing, close this dialog.        
                     SubGui.this.dispose();
                 }
                 catch(InvalidInputException eex)
                 {
+                    // show the error dialog.
                     JOptionPane.showMessageDialog(null, eex.getMessage(), 
                             "Error", JOptionPane.ERROR_MESSAGE);
                     reset();
@@ -145,7 +149,7 @@ public class SubGui extends JFrame implements ValidateInput
         add(bottomPanel);
     }
     
-    // override validateInput method of ValidateInput class
+    // override validateInput method of ValidateInput interface
     @Override
     public void validateInput() throws InvalidInputException
     {
@@ -176,7 +180,7 @@ public class SubGui extends JFrame implements ValidateInput
         }
     }
 
-    // override reset method of ValidateInput class
+    // override reset method of ValidateInput interface
     @Override
     public void reset()
     {
