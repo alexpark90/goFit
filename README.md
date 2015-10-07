@@ -18,6 +18,8 @@ I am planning to do it in the near futrue.
 Left-hand(West) navigation pane allows switching between various tabs(CardLayout)
 
 
+
+
 ![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit1.jpg)
 
 	
@@ -26,11 +28,15 @@ Welcome/Main Page:
 -	Open button: pops up a JFileChooser window to allow loading of an existing account.
 
 
-(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit2.jpg)
+
+
+![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit2.jpg)
 
 
 Create Account Page (SubGui):
 -	Name/Age/Gender JTextfields: allow user to input information about themselves for creation of a new account. 
+
+
 
 
 ![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit8.jpg)
@@ -43,6 +49,8 @@ Entry Page:
 -	Calculate JButton: uses the previous JTextFields to calculate the user’s One-Rep Maximum, 
                     and how much they can likely lift at various percentages of that maximum.
 -	Add/Edit JButtons: allow the user to add their inputs into their log, or to edit/delete previous entries.
+
+
 
 
 ![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit4.jpg)
