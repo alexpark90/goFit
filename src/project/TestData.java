@@ -12,13 +12,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-/////////////////////////////////////////////////////
-//
-// AUTHOR : Alex Park & Chris Sarvghadi
-// CREATE : 14-Apr-2015
-// UPDATE : 17-Apr-2015
-//
-/////////////////////////////////////////////////////
 
 /*
 * I am doing hardcoding here just to see the result on the console.
