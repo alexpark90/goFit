@@ -2,7 +2,7 @@
 
 This was my Java class' final project with a friend of mine, Chris.
 
-My main part was designing whole structure of the program, UML, json file handling, Exception handling, creating the bagic logic, and helper methods.
+My part was designing whole structure of the program, creating UML, json file handling, Exception handling, setting the card layout, and helper methods in mainGui and subGui.
 
 I created custom exception in ValidateInput interface and mainGui and subGui are implementing it.
 So, everytime user submit their inputs, mainGui or subGui's overriden methods of ValidateInput class is called,
