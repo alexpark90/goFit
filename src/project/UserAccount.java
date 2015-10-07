@@ -13,8 +13,8 @@ import java.util.ArrayList;
  *   File name: UserAccount.java 
  *   
  *   Description: This class holds user information such as name, age, gender.
- *                ArrayList called exerciseList contains 7 different exercises. 
- *                Each exercise is an array of logs.
+ *              ArrayList called exerciseList contains 7 different exercises. 
+ *              Each exercise is an array of logs.
  *
  *   @author Alex Yeji Park && Chris Sarvghadi 
  */
@@ -37,7 +37,13 @@ public class UserAccount
     private Exercise benchPress = new Exercise("BenchPress");
     
     ///////////////////////// CONSTRUCTOR //////////////////////
-
+    /**
+     *
+     * @param name - name of the account holder
+     * @param age - age of the account holder
+     * @param gender - gender of the account holder
+     * @throws project.ValidateInput.InvalidInputException
+     */
     public UserAccount(String name, int age, char gender) throws IllegalArgumentException
     {
         if(name.equals("") || age < 0)
