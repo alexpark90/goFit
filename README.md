@@ -18,7 +18,7 @@ I am planning to do it in the near futrue.
 Left-hand(West) navigation pane allows switching between various tabs(CardLayout)
 
 
-!(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit1.jpg)
+![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit1.jpg)
 
 	
 Welcome/Main Page:
