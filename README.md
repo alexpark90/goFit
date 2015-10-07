@@ -33,8 +33,8 @@ Create Account Page (SubGui):
 -	Name/Age/Gender JTextfields: allow user to input information about themselves for creation of a new account. 
 
 
-(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit8.jpg)
-(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit9.jpg)
+![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit8.jpg)
+![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit9.jpg)
 
 
 Entry Page:
@@ -45,8 +45,8 @@ Entry Page:
 -	Add/Edit JButtons: allow the user to add their inputs into their log, or to edit/delete previous entries.
 
 
-(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit4.jpg)
-(https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit5.jpg)
+![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit4.jpg)
+![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit5.jpg)
 
 
 Log Page: 
