@@ -30,9 +30,11 @@ import org.json.simple.parser.ParseException;
  *
  *   File name: MainGui.java 
  *   
- *   Description: This is the main GUI class of this application. 
- *                There are several methods to handle events and manipulate data. 
- *                This class contains subGui, which is used for creating new user account.
+ *   Description: This is the main GUI class of this application.
+ *              Basically, the user interface is made of 4 cards and each card has 2 section, west and center.
+ *              West section is static look for all 4 cards and only center section has different look for each card.
+ *              This class also contains subGui, which is used for creating new user account.
+ *                
  *
  *   @author Alex Yeji Park && Chris Sarvghadi 
  */
@@ -626,7 +628,13 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
 
     ///////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////HELPER METHODS/////////////////////////////////
-    
+    /**
+     * openFile method.
+     * It shows the file dialog for user to choose the file.
+     * 
+     * @param
+     * @return
+     */
     private boolean openFile()
     {     
         // create JFileChooser to open a file from the current directory
@@ -654,6 +662,13 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         }
     }
     
+    /**
+     * getAccountFromFile method.
+     * It reads the json file and store the data to UserAccount.
+     * 
+     * @param
+     * @return an instance of UserAccount that holds the data extracted from Json.
+     */
     private UserAccount getAccountFromFile() throws FileNotFoundException, ParseException, InvalidInputException
     {    
         UserAccount acc;
@@ -713,6 +728,14 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         return acc;
     }
     
+    /**
+     * deleteLog method.
+     * It deletes the log from the exercise list
+     * and also update the Json file.
+     * 
+     * @param index - the index of the log to be deleted.
+     * @return boolean result of deleting process.
+     */
     private boolean deleteLog(int index)
     {
         if(index==-1)
@@ -736,6 +759,17 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         return true;
     }
     
+    /**
+     * addNewLog method.
+     * It adds new log to the list to show the user
+     * and also update the Json file.
+     * 
+     * @param date - date of the exercise or this log
+     *        weight - the weight lifted
+     *        reps - the times of lifting
+     *        calories - calories to worked out
+     * @return
+     */
     private void addNewLog(String date, int weight, int reps, int calories) throws NumberFormatException, InvalidInputException
     {
         Log log = new Log(date, weight, reps, calories);
@@ -758,6 +792,17 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         accountJson.replace("ExerciseList", exerciseListJson);  
     }
 
+    /**
+     * editLog method.
+     * It modifies the log from the list
+     * and also update the Json file.
+     * 
+     * @param date - date of the exercise or this log
+     *        weight - the weight lifted
+     *        reps - the times of lifting
+     *        calories - calories to worked out
+     * @return
+     */
     private void editLog(String date, int weight, int reps, int calories) throws NumberFormatException, InvalidInputException
     {
         int chosenExercise = exerciseComboBoxEntry.getSelectedIndex();
@@ -782,7 +827,14 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         logsListModel.addElement(log);
     }
     
-    
+    /**
+     * saveFile method.
+     * It transfer the data that is stored in an instance of UserAccount 
+     * to JsonFile and save it.
+     * 
+     * @param
+     * @return
+     */
     private boolean saveFile()
     {
         // if the user try to save before open a file or create an account
@@ -802,7 +854,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         return true;
     }
     
-    
+    // override onChildUpdate method of TrasferData interface in SubGui
     @Override
     public void onChildUpdate(String name, int age, String gender)
     {
@@ -861,7 +913,7 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
         }
     }
     
-    
+    // override validateInput method of ValidateInput interface
     @Override
     public void validateInput() throws InvalidInputException, NumberFormatException
     {
@@ -886,7 +938,8 @@ public class MainGui extends JFrame implements SubGui.TransferData, ValidateInpu
             }
         }
     }
-
+    
+    // override reset method of ValidateInput interface
     @Override
     public void reset()
     {
