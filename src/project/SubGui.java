@@ -20,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 /**
  *   Submitted by: Alex Yeji Park && Chris Sarvghadi
- *
+ *   Date: Apr. 15. 2015
  *   Honor: I have completed this assignment on my own.
  *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
  *
