@@ -10,8 +10,8 @@ package project;
  *   File name: Log.java 
  *   
  *   Description: This class has the information of each day's work out 
- *                such as date, weight, reps, calories. Using this class method getRM, 
- *                users can check their one-rep-maximum-weight they can lift. 
+ *              such as date, weight, reps, calories. Using this class method getRM, 
+ *              users can check their one-rep-maximum-weight they can lift. 
  *
  *   @author Alex Yeji Park && Chris Sarvghadi 
  */
