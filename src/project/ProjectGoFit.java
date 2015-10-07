@@ -14,8 +14,8 @@ import javax.swing.JFrame;
    *   File name: ProjectGoFit.java 
    *
    *   Description: This application allows users to track the progress of their strength training fitness regimen.
-   *                        users are able to add or delete each day's workout (rm and calories) and save the changed date to a file. 
-   *                        This is the main class to create an instance of MainGui class and set the size and visibility of window.
+   *                users are able to add or delete each day's workout (rm and calories) and save the changed date to a file. 
+   *                This is the main class to create an instance of MainGui class and set the size and visibility of window.
    * 
    * 
    *   @author Alex Yeji Park && Chris Sarvghadi 
