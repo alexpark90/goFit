@@ -1,12 +1,9 @@
 
 package project;
 
-
 import javax.swing.JFrame;
 
-
 /**
-<<<<<<< HEAD
  *   Submitted by: Alex Yeji Park && Chris Sarvghadi 
  *
  *   Honor: I have completed this assignment on my own.
@@ -21,23 +18,7 @@ import javax.swing.JFrame;
  * 
  *   @author Alex Yeji Park && Chris Sarvghadi 
  */
-=======
-   *   Submitted by: Alex Yeji Park && Chris Sarvghadi 
-   *
-   *   Honor: I have completed this assignment on my own.
-   *       In researching the assignment I got help/ideas from http://stackoverflow.com/ 
-   *
-   *   File name: ProjectGoFit.java 
-   *
-   *   Description: This application allows users to track the progress of their strength training fitness regimen.
-   *                users are able to add or delete each day's workout (rm and calories) and save the changed date to a file. 
-   *                This is the main class to create an instance of MainGui class and set the size and visibility of window.
-   * 
-   * 
-   *   @author Alex Yeji Park && Chris Sarvghadi 
-   */
->>>>>>> origin/master
-
+ 
 public class ProjectGoFit 
 {
 
