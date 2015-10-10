@@ -20,7 +20,7 @@ Left-hand(West) navigation pane allows switching between various tabs(CardLayout
 
 
 
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit1.jpg)
+![Image file of the app](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit1.jpg)
 
 	
 Welcome/Main Page:
@@ -30,7 +30,7 @@ Welcome/Main Page:
 
 
 
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit2.jpg)
+![Image file of the app](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit2.jpg)
 
 
 Create Account Page (SubGui):
@@ -39,8 +39,8 @@ Create Account Page (SubGui):
 
 
 
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit8.jpg)
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit9.jpg)
+![Image file of the app](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit8.jpg)
+![Image file of the app](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit9.jpg)
 
 
 Entry Page:
@@ -53,8 +53,8 @@ Entry Page:
 
 
 
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit4.jpg)
-![alexpark90.github.io](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit5.jpg)
+![Image file of the app](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit4.jpg)
+![Image file of the app](https://raw.githubusercontent.com/alexpark90/goFit/master/screenshots/gofit5.jpg)
 
 
 Log Page: 
