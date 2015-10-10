@@ -1,6 +1,6 @@
 # goFit
 
-This was my Java class' final project with a friend of mine, Chris.
+This was my third Java project for shcool, It was team project with a friend of mine, Chris.
 
 My part was designing whole structure of the program, creating UML, json file handling, Exception handling, setting the card layout, and helper methods in mainGui and subGui.
 
